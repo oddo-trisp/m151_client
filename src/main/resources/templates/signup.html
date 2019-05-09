@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Sign Up - CookHub</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/file-upload-with-preview@3.4.3/dist/file-upload-with-preview.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/signup.css">
+    <link href="https://fonts.googleapis.com/css?family=Pacifico|Raleway" rel="stylesheet">
+    <!-- JQUERY -->
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+<div class="container-fluid">
+    <section id="sign-up">
+        <h1 class="logo">CookHub</h1>
+        <form action="/registration" method="POST" th:object="${newAppUser}">
+
+            <div class="custom-file-container form-group" data-upload-id="profile-pic">
+                <label class="custom-file-container__custom-file">
+                    <input type="file" class="custom-file-container__custom-file__custom-file-input form-control" accept="*" aria-label="Choose Profile Picture">
+                    <input type="hidden" name="MAX_FILE_SIZE" value="10485760" />
+                    <span class="custom-file-container__custom-file__custom-file-control"></span>
+                </label>
+                <label><a href="javascript:void(0)" class="custom-file-container__image-clear" title="Clear Image">&times;</a></label>
+                <div class="custom-file-container__image-preview"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" class="form-control" id="name" th:required="required" th:field="*{fullName}" >
+            </div>
+            <div class="form-group">
+                <label for="email">Email address:</label>
+                <input type="email" class="form-control" id="email" th:required="required" th:field="*{email}" >
+            </div>
+            <div class="form-group">
+                <label for="pwd">Password:</label>
+                <input type="password" class="form-control" id="pwd" th:required="required" th:field="*{password}" >
+            </div>
+            <div class="text-center">
+                <input type="submit" class="btn btn-primary">Sign Up</input>
+            </div>
+            <p class="signin-prompt">Already a member? <a href="signin.html">Log In</a></p>
+        </form>
+    </section>
+</div>
+
+<script src="https://unpkg.com/file-upload-with-preview@3.4.3/dist/file-upload-with-preview.min.js"></script>
+<script>
+    var upload = new FileUploadWithPreview('profile-pic')
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+
+</html>
