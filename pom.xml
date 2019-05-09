@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>gr.di.uoa.m151</groupId>
-    <artifactId>rest_client</artifactId>
+    <artifactId>m151_client</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>rest_client</name>
+    <name>m151_client</name>
     <description>Rest Client with RestTemplate and Thymeleaf</description>
 
     <properties>
