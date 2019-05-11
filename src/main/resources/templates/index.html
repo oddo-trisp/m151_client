@@ -1,42 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
   <title>CookHub</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-  <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="css/navbar.css">
-  <link rel="stylesheet" href="css/sidebar.css">
-  <link rel="stylesheet" href="css/index.css">
-  <link href="https://fonts.googleapis.com/css?family=Pacifico|Raleway|Comfortaa" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="https://unpkg.com/file-upload-with-preview@3.4.3/dist/file-upload-with-preview.min.css">
+  <link rel="stylesheet" th:href="@{css/styles.css}">
+  <link rel="stylesheet" th:href="@{css/navbar.css}">
+  <link rel="stylesheet" th:href="@{css/sidebar.css}">
+  <link rel="stylesheet" th:href="@{css/index.css}">
+  <link href="https://fonts.googleapis.com/css?family=Pacifico|Raleway" rel="stylesheet">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
   <!-- JQUERY -->
   <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
-  <!-- Components load -->
-  <script>
-    $(function() {
-      $('#navigation').load("html_components/navbar.html");
-    });
-  </script>
-  <script>
-    $(function() {
-      $('#sidebar').load("html_components/sidebar.html");
-    });
-  </script>
 </head>
 
 <body>
 
   <div class="container-fluid">
-    <header id="navigation"></header>
+    <header id="navigation" th:include="html_components/navbar"></header>
     <section class="main-body row">
       <div class="col-lg-7 col-md-12" id="post-feed">
         <article class="post">
           <h4>The world's best cheeseburger</h4>
-          <p>by <a href="profile.html" class="author-name"> George Apostolopoulos</a> </p>
+          <p>by <a th:href="@{/profile}" class="author-name"> George Apostolopoulos</a> </p>
           <div class="image">
             <img src="img/post/cheeseburger.png" alt="">
           </div>
@@ -45,12 +34,12 @@
           </div>
           <div class="post-buttons">
             <div class="action like-action"><i class="far fa-heart"></i></div>
-            <div class="action"><a href="post-page.html" title="Open post's page"><i class="far fa-share-square"></i></a></div>
+            <div class="action"><a th:href="@{/post}" title="Open post's page"><i class="far fa-share-square"></i></a></div>
           </div>
         </article>
         <article class="post">
           <h4>My Ramen is better than yours!</h4>
-          <p>by <a href="profile.html" class="author-name"> Odysseas Trispiotis</a> </p>
+          <p>by <a th:href="@{/profile}" class="author-name"> Odysseas Trispiotis</a> </p>
           <div class="image">
             <img src="img/post/ramen.png" alt="">
           </div>
@@ -59,16 +48,16 @@
           </div>
           <div class="post-buttons">
             <div class="action like-action"><i class="far fa-heart"></i></div>
-            <div class="action"><a href="post-page.html" title="Open post's page"><i class="far fa-share-square"></i></a></div>
+            <div class="action"><a th:href="@{/post}" title="Open post's page"><i class="far fa-share-square"></i></a></div>
           </div>
         </article>
       </div>
-      <div class="col-md-5 d-lg-block d-none" id="sidebar"></div>
+      <div th:include="html_components/sidebar" class="col-md-5 d-lg-block d-none" id="sidebar"></div>
     </section>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js}"></script>
+  <script th:src="@{https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js}"></script>
   <!-- infinite post-feed scrolling -->
   <script>
     function rescroll() {

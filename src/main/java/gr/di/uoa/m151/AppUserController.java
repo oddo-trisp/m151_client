@@ -17,6 +17,10 @@ public class AppUserController {
     private static final String INDEX = "index";
     private static final String SIGN_UP = "signup";
     private static final String SIGN_IN = "signin";
+    private static final String NEWPOST = "newpost";
+    private static final String PEOPLE = "people";
+    private static final String PROFILE = "profile";
+    private static final String POST = "post";
 
 
     private static final String NEW_APP_USER = "newAppUser";
@@ -59,5 +63,25 @@ public class AppUserController {
         return restClientService.signIn(newAppUser);
     }
 
+
+    @RequestMapping(value = {"/newpost"}, method = RequestMethod.POST)
+    public String newpostPage(Model model) {
+        return NEWPOST;
+    }
+
+    @RequestMapping(value = { "/people" }, method = RequestMethod.GET)
+    public String peoplePage(Model model) {
+        return PEOPLE;
+    }
+
+    @RequestMapping(value = { "/profile" }, method = RequestMethod.GET)
+    public String profilePage(Model model) {
+        return PROFILE;
+    }
+
+    @RequestMapping(value = {"/post" }, method = RequestMethod.GET)
+    public String postPage(Model model) {
+        return POST;
+    }
 }
 

@@ -1,31 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
   <title>CookHub</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-  <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="css/navbar.css">
-  <link rel="stylesheet" href="css/profile.css">
-  <link href="https://fonts.googleapis.com/css?family=Pacifico|Raleway|Comfortaa" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css}">
+  <link rel="stylesheet" th:href="@{css/styles.css}">
+  <link rel="stylesheet" th:href="@{css/navbar.css}">
+  <link rel="stylesheet" th:href="@{css/profile.css}">
+  <link href="https://fonts.googleapis.com/css?family=Pacifico|Raleway" rel="stylesheet">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
   <!-- JQUERY -->
   <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
-  <!-- Components load -->
-  <script>
-    $(function() {
-      $('#navigation').load("html_components/navbar.html");
-    });
-  </script>
 </head>
 
 <body>
 
   <div class="container-fluid">
-    <header id="navigation"></header>
+    <header id="navigation" th:include="html_components/navbar"></header>
     <section class="profile-page">
       <img class="profile-img" src="img/friends.png" alt=""></img>
       <p class="name">George Apostolopoulos</p>
@@ -41,54 +35,49 @@
         <div class="tab-pane fade show active" id="nav-posts" role="tabpanel" aria-labelledby="nav-posts-tab">
           <div class="posts row">
             <div class="col-lg-4 col-md-6 col-sm-12 post">
-              <a href=""><img src="http://placehold.it/80x80" /></a>
+              <a th:href="@{/post}"><img src="http://placehold.it/80x80" /></a>
               <p class="post-title">My first post</p>
             </div>
             <div class="col-lg-4 col-md-6 col-sm-12 post">
-              <a href=""><img src="http://placehold.it/80x80" /></a>
-              <p class="post-title">Another post</p>
+              <a th:href="@{/post}"><img src="http://placehold.it/80x80" /></a>
+              <p class="post-title">My first post</p>
             </div>
             <div class="col-lg-4 col-md-6 col-sm-12 post">
-              <a href=""><img src="http://placehold.it/80x80" /></a>
-              <p class="post-title">Another post</p>
+              <a th:href="@{/post}"><img src="http://placehold.it/80x80" /></a>
+              <p class="post-title">My first post</p>
             </div>
             <div class="col-lg-4 col-md-6 col-sm-12 post">
-              <a href=""><img src="http://placehold.it/80x80" /></a>
-              <p class="post-title">Another post</p>
+              <a th:href="@{/post}"><img src="http://placehold.it/80x80" /></a>
+              <p class="post-title">My first post</p>
             </div>
             <div class="col-lg-4 col-md-6 col-sm-12 post">
-              <a href=""><img src="http://placehold.it/80x80" /></a>
-              <p class="post-title">Another post</p>
-            </div>
-            <div class="col-lg-4 col-md-6 col-sm-12 post">
-              <a href=""><img src="http://placehold.it/80x80" /></a>
-              <p class="post-title">Another post</p>
+              <a th:href="@{/post}"><img src="http://placehold.it/80x80" /></a>
+              <p class="post-title">My first post</p>
             </div>
           </div>
         </div>
-        <div class="tab-pane fade" id="nav-followers" role="tabpanel" aria-labelledby="nav-followers-tab">
+        <div class="tab-pane fade" class="nav-followers" role="tabpanel" aria-labelledby="nav-followers-tab">
           <div class="followers row">
-            <div class="col-md-3 col-sm-12"><a href="profile.html"><img src="img/friends.png" alt=""></a><p>Name Surname</p></div>
-            <div class="col-md-3 col-sm-12"><a href="profile.html"><img src="img/friends.png" alt=""></a><p>Name Surname</p></div>
-            <div class="col-md-3 col-sm-12"><a href="profile.html"><img src="img/friends.png" alt=""></a><p>Name Surname</p></div>
-            <div class="col-md-3 col-sm-12"><a href="profile.html"><img src="img/friends.png" alt=""></a><p>Name Surname</p></div>
+            <div class="col-md-3 col-sm-12"><a th:href="@{/profile}"><img src="img/friends.png" alt=""></a><p>Name Surname</p></div>
+            <div class="col-md-3 col-sm-12"><a th:href="@{/profile}"><img src="img/friends.png" alt=""></a><p>Name Surname</p></div>
+            <div class="col-md-3 col-sm-12"><a th:href="@{/profile}"><img src="img/friends.png" alt=""></a><p>Name Surname</p></div>
+            <div class="col-md-3 col-sm-12"><a th:href="@{/profile}"><img src="img/friends.png" alt=""></a><p>Name Surname</p></div>
           </div>
         </div>
-        <div class="tab-pane fade" id="nav-following" role="tabpanel" aria-labelledby="nav-following-tab">
-          <div class="following row">
-            <div class="col-md-3 col-sm-12"><a href="profile.html"><img src="img/friends.png" alt=""></a><p>Name Surname</p></div>
-            <div class="col-md-3 col-sm-12"><a href="profile.html"><img src="img/friends.png" alt=""></a><p>Name Surname</p></div>
-            <div class="col-md-3 col-sm-12"><a href="profile.html"><img src="img/friends.png" alt=""></a><p>Name Surname</p></div>
-            <div class="col-md-3 col-sm-12"><a href="profile.html"><img src="img/friends.png" alt=""></a><p>Name Surname</p></div>
+        <div class="tab-pane fade" class="nav-followers" role="tabpanel" aria-labelledby="nav-followers-tab">
+          <div class="followers row">
+            <div class="col-md-3 col-sm-12"><a th:href="@{/profile}"><img src="img/friends.png" alt=""></a><p>Name Surname</p></div>
+            <div class="col-md-3 col-sm-12"><a th:href="@{/profile}"><img src="img/friends.png" alt=""></a><p>Name Surname</p></div>
+            <div class="col-md-3 col-sm-12"><a th:href="@{/profile}"><img src="img/friends.png" alt=""></a><p>Name Surname</p></div>
+            <div class="col-md-3 col-sm-12"><a th:href="@{/profile}"><img src="img/friends.png" alt=""></a><p>Name Surname</p></div>
           </div>
         </div>
       </div>
-
     </section>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js}"></script>
+  <script th:src="@{https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js}"></script>
 </body>
 
 </html>

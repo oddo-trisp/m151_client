@@ -34,3 +34,14 @@
     font-size: 1.2rem;
   }
 }
+
+/* BUTTON PRIMARY CONFIGURATION */
+.btn-primary{
+  background-color: #556080 !important;
+  border: none;
+  margin: 1em auto;
+  font-size: 1em;
+}
+.btn-primary:hover{
+  background-color: #555070 !important;
+}

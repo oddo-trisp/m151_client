@@ -26,7 +26,7 @@ public class RestClientService implements UserDetailsService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
-    private final String REST_SERVER = "http://localhost:8080/";
+    private final String REST_SERVER = "http://localhost:8280/";
     private final String SIGN_UP = "signup";
     private final String SIGN_IN = "signin";
     private final String FIND_APPUSER_BY_EMAIL = "findAppUserByEmail";
