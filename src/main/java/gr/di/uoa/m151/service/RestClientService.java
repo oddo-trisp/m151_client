@@ -6,9 +6,12 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +19,12 @@ import java.util.Map;
 @Service
 public class RestClientService implements UserDetailsService {
 
-    private final RestTemplate restTemplate;
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
 
     private final String REST_SERVER = "http://localhost:8080/";
     private final String SIGN_UP = "signup";
@@ -24,18 +32,21 @@ public class RestClientService implements UserDetailsService {
     private final String FIND_APPUSER_BY_EMAIL = "findAppUserByEmail";
 
 
-    @Autowired
-    public RestClientService(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
-
-
     public boolean checkIfAppUserExists(String email){
-        return restTemplate.getForEntity(REST_SERVER + FIND_APPUSER_BY_EMAIL, AppUser.class, email).getBody() != null;
+        URI targetUrl= UriComponentsBuilder.fromUriString(REST_SERVER)  // Build the base link
+                .path(FIND_APPUSER_BY_EMAIL)                            // Add path
+                .queryParam("email", email)                                // Add one or more query params
+                .build()                                                 // Build the URL
+                .encode()                                                // Encode any URI items that need to be encoded
+                .toUri();                                                // Convert to URI
+
+        return restTemplate.getForObject(targetUrl, AppUser.class) != null;
     }
 
     //Test call to server api
     public AppUser signUp(AppUser newAppUser){
+        newAppUser.setEncryptedPassword(bCryptPasswordEncoder.encode(newAppUser.getPassword()));
+
         return restTemplate.postForEntity(REST_SERVER+SIGN_UP, newAppUser, AppUser.class).getBody();
     }
 
@@ -49,9 +60,14 @@ public class RestClientService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
 
-        Map<String, String> parameters = new HashMap<>();
-        parameters.put("email", userName);
-        AppUser appUser = restTemplate.getForObject(REST_SERVER + FIND_APPUSER_BY_EMAIL, AppUser.class, parameters);
+        URI targetUrl= UriComponentsBuilder.fromUriString(REST_SERVER)  // Build the base link
+                .path(FIND_APPUSER_BY_EMAIL)                            // Add path
+                .queryParam("email", userName)                                // Add one or more query params
+                .build()                                                 // Build the URL
+                .encode()                                                // Encode any URI items that need to be encoded
+                .toUri();                                                // Convert to URI
+
+        AppUser appUser = restTemplate.getForObject(targetUrl, AppUser.class);
 
         if (appUser == null) {
             System.out.println("User not found! " + userName);
@@ -60,6 +76,6 @@ public class RestClientService implements UserDetailsService {
 
         System.out.println("Found User: " + appUser);
 
-        return new User(appUser.getEmail(), appUser.getPassword(), new ArrayList<>());
+        return new User(appUser.getEmail(), appUser.getEncryptedPassword(), new ArrayList<>());
     }
 }

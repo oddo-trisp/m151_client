@@ -21,7 +21,6 @@ public class AppUserController {
 
     private static final String NEW_APP_USER = "newAppUser";
 
-
     @Autowired
     public AppUserController(RestClientService restClientService) {
         this.restClientService = restClientService;

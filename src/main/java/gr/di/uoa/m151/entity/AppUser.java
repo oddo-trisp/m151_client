@@ -14,6 +14,8 @@ public class AppUser implements Serializable {
 
     private String password;
 
+    private String encryptedPassword;
+
     private boolean enabled = true;
 
     private List<Post> posts = new ArrayList<>();
@@ -79,5 +81,13 @@ public class AppUser implements Serializable {
 
     public void setPosts(List<Post> posts) {
         this.posts = posts;
+    }
+
+    public String getEncryptedPassword() {
+        return encryptedPassword;
+    }
+
+    public void setEncryptedPassword(String encryptedPassword) {
+        this.encryptedPassword = encryptedPassword;
     }
 }
