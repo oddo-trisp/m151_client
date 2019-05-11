@@ -1,6 +1,7 @@
 package gr.di.uoa.m151.service;
 
 import gr.di.uoa.m151.entity.AppUser;
+import gr.di.uoa.m151.entity.Post;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,6 +31,7 @@ public class RestClientService implements UserDetailsService {
     private final String SIGN_UP = "signup";
     private final String SIGN_IN = "signin";
     private final String FIND_APPUSER_BY_EMAIL = "findAppUserByEmail";
+    private final String ADD_NEW_POST = "addNewPost";
 
 
     public boolean checkIfAppUserExists(String email){
@@ -48,13 +50,6 @@ public class RestClientService implements UserDetailsService {
         newAppUser.setEncryptedPassword(bCryptPasswordEncoder.encode(newAppUser.getPassword()));
 
         return restTemplate.postForEntity(REST_SERVER+SIGN_UP, newAppUser, AppUser.class).getBody();
-    }
-
-    public String signIn(AppUser newAppUser){
-        Map<String, String> parameters = new HashMap<>();
-        parameters.put("username", newAppUser.getEmail());
-        parameters.put("password", newAppUser.getPassword());
-        return restTemplate.postForEntity(REST_SERVER+SIGN_IN, parameters, String.class).getBody();
     }
 
     @Override
@@ -77,5 +72,17 @@ public class RestClientService implements UserDetailsService {
         System.out.println("Found User: " + appUser);
 
         return new User(appUser.getEmail(), appUser.getEncryptedPassword(), new ArrayList<>());
+    }
+
+    public String addNewPost(String email, Post newPost){
+
+        URI targetUrl= UriComponentsBuilder.fromUriString(REST_SERVER)  // Build the base link
+                .path(ADD_NEW_POST)                                     // Add path
+                .queryParam("email", email)                      // Add one or more query params
+                .build()                                                 // Build the URL
+                .encode()                                                // Encode any URI items that need to be encoded
+                .toUri();                                                // Convert to URI
+
+        return restTemplate.postForEntity(targetUrl, newPost, String.class).getBody();
     }
 }

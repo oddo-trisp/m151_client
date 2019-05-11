@@ -1,6 +1,7 @@
 package gr.di.uoa.m151;
 
 import gr.di.uoa.m151.entity.AppUser;
+import gr.di.uoa.m151.entity.Post;
 import gr.di.uoa.m151.service.RestClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -8,6 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import java.security.Principal;
 
 @Controller
 public class AppUserController {
@@ -24,6 +27,7 @@ public class AppUserController {
 
 
     private static final String NEW_APP_USER = "newAppUser";
+    private static final String NEW_POST = "newPost";
 
     @Autowired
     public AppUserController(RestClientService restClientService) {
@@ -58,15 +62,18 @@ public class AppUserController {
                 ? SIGN_IN : SIGN_UP;
     }
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String loginPage(@ModelAttribute AppUser newAppUser) {
-        return restClientService.signIn(newAppUser);
+
+    @RequestMapping(value = {"/newpost"}, method = RequestMethod.GET)
+    public String newpostPage(Model model) {
+        Post newPost = new Post();
+        model.addAttribute(NEW_POST, newPost);
+        return NEWPOST;
     }
 
-
-    @RequestMapping(value = {"/newpost"}, method = RequestMethod.POST)
-    public String newpostPage(Model model) {
-        return NEWPOST;
+    @RequestMapping(value = "/addNewPost", method = RequestMethod.POST)
+    public String registrationPage(@ModelAttribute Post newPost, Principal principal) {
+        return restClientService.addNewPost(principal.getName(), newPost) != null
+                ? INDEX : NEWPOST;
     }
 
     @RequestMapping(value = { "/people" }, method = RequestMethod.GET)

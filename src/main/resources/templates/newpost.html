@@ -24,14 +24,14 @@
     <header id="navigation" th:include="html_components/navbar"></header>
     <p class="title-header">Add new post</p>
     <section class="new-post row">
-      <form action="/">
+      <form action="/addNewPost" method="POST" th:object="${newPost}">
         <div class="form-group">
           <label for="title">Title:</label>
-          <input type="text" class="form-control" id="title">
+          <input type="text" class="form-control" id="title" th:required="required" th:field="*{postTitle}">
         </div>
         <div class="form-group">
           <label for="description">Description:</label>
-          <textarea class="form-control" rows="5" id="description"></textarea>
+          <textarea class="form-control" rows="5" id="description" th:required="required" th:field="*{postText}"></textarea>
         </div>
         <div class="custom-file-container form-group" data-upload-id="post-pic">
           <label class="custom-file-container__custom-file">

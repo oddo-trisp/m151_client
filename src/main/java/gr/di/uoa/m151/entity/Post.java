@@ -8,6 +8,8 @@ public class Post {
 
     private Long id;
 
+    private String postTitle;
+
     private String postText;
 
     private Timestamp creationDate;
@@ -17,13 +19,20 @@ public class Post {
     private List<UserPostReaction> userReactions = new ArrayList<>();
 
 
-
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getPostTitle() {
+        return postTitle;
+    }
+
+    public void setPostTitle(String postTitle) {
+        this.postTitle = postTitle;
     }
 
     public String getPostText() {
