@@ -14,7 +14,10 @@ public class AppUserController {
 
     private final RestClientService restClientService;
 
+    private static final String INDEX = "index";
     private static final String SIGN_UP = "signup";
+    private static final String SIGN_IN = "signin";
+
 
     private static final String NEW_APP_USER = "newAppUser";
 
@@ -24,17 +27,37 @@ public class AppUserController {
         this.restClientService = restClientService;
     }
 
+    @RequestMapping(value = { "/", "/index" }, method = RequestMethod.GET)
+    public String indexPage(Model model) {
+        //model.addAttribute(TITLE, "Home");
+        return INDEX;
+    }
+
     @RequestMapping(value = "/signup", method = RequestMethod.GET)
-    public String registerPage(Model model) {
+    public String signUpPage(Model model) {
         AppUser newAppUser = new AppUser();
         model.addAttribute(NEW_APP_USER, newAppUser);
         return SIGN_UP;
     }
 
+    @RequestMapping(value = "/signin", method = RequestMethod.GET)
+    public String signInPage(Model model) {
+        AppUser newAppUser = new AppUser();
+        model.addAttribute(NEW_APP_USER, newAppUser);
+        return SIGN_IN;
+    }
+
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public String signUpPage(@ModelAttribute AppUser newAppUser) {
-        return restClientService.signUp(newAppUser).getFullName();
+    public String registrationPage(@ModelAttribute AppUser newAppUser) {
+        return restClientService.checkIfAppUserExists(newAppUser.getEmail()) ? SIGN_UP
+                : restClientService.signUp(newAppUser) != null
+                ? SIGN_IN : SIGN_UP;
+    }
+
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public String loginPage(@ModelAttribute AppUser newAppUser) {
+        return restClientService.signIn(newAppUser);
     }
 
 }

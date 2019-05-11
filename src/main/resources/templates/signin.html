@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
   <title>Sign In - CookHub</title>
@@ -15,20 +15,30 @@
   <div class="container-fluid">
     <section id="sign-up">
       <h1 class="logo">CookHub</h1>
-      <form action="/">
+      <form th:action="@{/j_spring_security_check}" method="POST">
         <div class="form-group">
           <label for="email">Email address:</label>
-          <input type="email" class="form-control" id="email">
+          <input type="email" class="form-control" id="email" th:required="required" >
         </div>
         <div class="form-group">
           <label for="pwd">Password:</label>
-          <input type="password" class="form-control" id="pwd">
+          <input type="password" class="form-control" id="pwd" th:required="required" >
         </div>
         <div class="text-center">
           <button type="submit" class="btn btn-primary">Sign In</button>
         </div>
-        <p class="signin-prompt">Not a member yet? <a href="signup.html">Sign Up</a></p>
+        <p class="signin-prompt">Not a member yet? <a th:href="@{/signup}">Sign Up</a></p>
       </form>
+      <!-- /login?error=true -->
+      <div th:if="${#request.getParameter('error') == 'true'}" class="text-red text-center">
+        Login Failed!!! Reason :
+        <span th:if="${#session!= null and #session.getAttribute('SPRING_SECURITY_LAST_EXCEPTION') != null}"
+              th:utext="${#session.getAttribute('SPRING_SECURITY_LAST_EXCEPTION').message}">
+                    Static summary
+        </span>
+      </div>
+      <div th:if="${#request.getParameter('logoutSuccess') == 'true'}" class="text-light-blue text-center">Successfully Logged Out</div>
+
     </section>
   </div>
 

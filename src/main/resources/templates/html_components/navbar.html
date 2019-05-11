@@ -1,4 +1,4 @@
-<nav class="navbar fixed-top navbar-expand-sm navbar-light bg-light">
+<nav class="navbar fixed-top navbar-expand-sm navbar-light bg-light" xmlns:th="http://www.thymeleaf.org">
   <a class="navbar-brand" href="index.html">CookHub</a>
   <ul class="navbar-nav mr-auto">
   </ul>
@@ -16,6 +16,11 @@
     </li>
     <li>
       <a class="nav-link" href="" title="Logout"><img class="nav-icon" src="img/navbar-icons/logout.png"/></a>
+    </li>
+    <li>
+      <h3>Welcome :
+        <span th:utext="${#request.userPrincipal.name}"></span>
+      </h3>
     </li>
   </ul>
 </nav>
