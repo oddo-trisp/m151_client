@@ -1,0 +1,39 @@
+.title-header{
+  text-align: center;
+  font-size: 1.5rem;
+  margin: 1em 0;
+}
+
+.person{
+  margin: 1em auto;
+}
+
+.person-body{
+  text-align: center;
+}
+
+.person-name{
+  margin-left: 1rem;
+}
+
+.post-img{
+  width: 200px;
+  padding: 10px;
+}
+
+.view-profile-button{
+  text-align: right;
+}
+
+@media (max-width: 576px) {
+  .title-header{
+    font-size: 1.25rem;
+  }
+  .person-name{
+    white-space: nowrap;
+  }
+  .post-img{
+    text-align: center;
+    width: 140px;
+  }
+}

@@ -1,0 +1,23 @@
+.navbar{
+    border-bottom: 2px solid rgba(194,194,194,0.75);
+    padding-left: 20%;
+    padding-right: 20%;
+}
+
+.navbar .navbar-brand{
+    font-family: 'Pacifico', cursive;
+    color: rgb(194,91,91);
+    font-size: 1.4em;
+}
+
+.navbar .navbar-nav .nav-item a{
+    color: rgb(194,91,91);
+    font-weight: bold;
+    font-size: 1.2em;
+    margin: 0 2em 0 0;
+}
+
+.nav-icon{
+    width: 20px;
+    height: 20px;
+}

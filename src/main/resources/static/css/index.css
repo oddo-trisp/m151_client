@@ -1,0 +1,62 @@
+.main-body {
+  width: 100%;
+}
+
+#post-feed {
+  text-align: justify;
+  padding: 0 2%;
+}
+
+/* Post */
+.post {
+  margin-bottom: 2em;
+  border-bottom: 5px solid rgba(189, 195, 199, .6);
+  padding: 1em 0;
+}
+
+.post p {
+  font-size: .9em;
+}
+
+.author-name {
+  color: #357c89;
+}
+
+.author-name:hover {
+  color: #336699;
+  text-decoration: none;
+}
+
+/* Post image */
+.post .image {
+  text-align: center;
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+
+.post .image img {
+  width: 60%;
+}
+
+/* Post description */
+/* Post buttons */
+.post-buttons {
+  width: 100%;
+  text-align: center;
+}
+
+.action {
+  display: inline-block;
+  margin: 1em 1em;
+}
+
+.action i {
+  font-size: 32px;
+  color: #c25b5b;
+}
+
+@media (max-width: 576px) {
+  .main-body {
+    padding-top: 0px;
+  }
+}

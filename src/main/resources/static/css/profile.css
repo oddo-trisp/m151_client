@@ -1,0 +1,36 @@
+.profile-page{
+  padding: 2em 0;
+  text-align: center;
+}
+
+.profile-img{
+  width: 100px;
+}
+
+.name{
+  font-size: 1.75rem;
+  margin: 1em 0;
+}
+
+.tab-content{
+  margin-top: 2em;
+}
+
+.posts img{
+  width: 180px;
+  height:180px;
+}
+
+.post-title{
+  margin-top: 1em;
+}
+
+.followers p, .following p{
+  margin-top: .75em;
+}
+
+@media (max-width: 576px){
+  .name{
+    font-size: 1.2rem;
+  }
+}

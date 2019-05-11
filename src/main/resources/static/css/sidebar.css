@@ -1,0 +1,52 @@
+
+.sticky-offset {
+    top: 80px;
+}
+
+@media (max-width: 576px){
+    .sticky-offset{
+        top: 200px;
+    }
+}
+
+.suggestions{
+    /* background-color: #f4f5f4; */
+    /* padding: 1em; */
+    text-align: center;
+    /* border-radius: 25px; */
+}
+
+.suggestions h5{
+    margin-bottom: .5em;
+}
+
+.suggestion img{
+    width: 50px;
+    height: 50px;
+    margin: 1em 0;
+}
+
+.follow-btn{
+    background-color: #c25b5b;
+    color: white;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: .7em;
+}
+
+.follow-btn:hover{
+    background-color: #ae5151;
+    text-decoration: none;
+    color: white;
+}
+
+/* BUTTON PRIMARY CONFIGURATION */
+.btn-primary{
+    background-color: #556080 !important;
+    border: none;
+    margin: 2em auto;
+    font-size: .75em;
+}
+.btn-primary:hover{
+    background-color: #555070 !important;
+}

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>CookHub</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="https://unpkg.com/file-upload-with-preview@3.4.3/dist/file-upload-with-preview.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/sidebar.css">
+  <link rel="stylesheet" href="css/post-page.css">
+  <link href="https://fonts.googleapis.com/css?family=Pacifico|Raleway|Comfortaa" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+  <!-- JQUERY -->
+  <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+  <!-- Components load -->
+  <script>
+    $(function() {
+      $('#navigation').load("html_components/navbar.html");
+    });
+  </script>
+</head>
+
+<body>
+
+  <div class="container-fluid">
+    <header id="navigation"></header>
+    <p class="title-header">Post's title goes here</p>
+    <section class="post">
+      <article class="post-img row">
+        <img src="img/post/cheeseburger.png" alt="">
+      </article>
+      <article class="post-desc row">
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dignissimos architecto magni, inventore eveniet
+          atque veritatis consequatur doloremque, ratione, fuga sint corrupti quas dolores debitis. Commodi, obcaecati qui autem dolor totam.
+          Ea iure porro, illo commodi amet blanditiis accusantium numquam explicabo fugit saepe veniam enim, repudiandae cum magnam architecto,
+          odio minima ex deserunt mollitia alias dolores quidem necessitatibus inventore officiis! Beatae?
+        </p>
+      </article>
+      <div class="post-buttons">
+        <div class="action like-action"><i class="far fa-heart"></i></div>
+        <div class="action comment-action"><i class="fa fa-comment comment-icon"></i></div>
+      </div>
+
+      <div class="form-popup" id="comment-form" style="display: none;">
+        <form action="/" class="form-container">
+          <div class="form-group">
+            <label for="title"><b>Title</b></label>
+            <input class="form-control" type="text" placeholder="Enter title" name="title" required>
+          </div>
+          <div class="form-group">
+            <label for="text"><b>Text</b></label>
+            <textarea class="form-control" placeholder="Enter text" rows="7" name="text"></textarea>
+          </div>
+          <button class="form-control" type="submit" class="btn">Add</button>
+          <button class="form-control" type="button" class="btn cancel" onclick="closeForm()">Close</button>
+        </form>
+      </div>
+
+      <article class="comments row">
+        <p class="title-header">Comments</p>
+        <div class="comment card">
+          <div class="card-body">
+            <p class="comment-title card-title">Amazing burger</p>
+            <p class="comment-text card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Possimus praesentium, illo nobis dolorum eaque reprehenderit aliquid nostrum ab, harum quo necessitatibus consequatur saepe quia beatae in id!
+              Quia, dolor, impedit.</p>
+            <p class="author-name"><a href="profile.html">George Apostolopoulos</a></p>
+          </div>
+        </div>
+        <div class="comment card">
+          <div class="card-body">
+            <p class="comment-title card-title">Amazing burger</p>
+            <p class="comment-text card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Possimus praesentium, illo nobis dolorum eaque reprehenderit aliquid nostrum ab, harum quo necessitatibus consequatur saepe quia beatae in id!
+              Quia, dolor, impedit.</p>
+            <p class="author-name"><a href="profile.html">George Apostolopoulos</a></p>
+          </div>
+        </div>
+      </article>
+    </section>
+  </div>
+  <!-- leave comment form -->
+  <script>
+    $(".comment-icon").click(function(){
+      $(".form-popup").css("display","block");
+    });
+    function closeForm() {
+      $(".form-popup").css("display","none");
+    }
+  </script>
+  <!-- infinite post-feed scrolling -->
+  <script>
+    function rescroll() {
+      $('.comment').show();
+      // hide everything that is out of bound
+      $('.comment').filter(function(index) {
+        console.log($(this).position().top, $(window).height() + $(window).scrollTop());
+        return ($(this).position().top > $(window).height() + $(window).scrollTop());
+      }).hide();
+    }
+    $(window).scroll(function() {
+      rescroll();
+    });
+    rescroll();
+  </script>
+  <!-- Like/Unlike action -->
+  <script>
+    $(document).ready(function() {
+      $(".like-action i").click(function() {
+        if ($(this).hasClass("far")) {
+          $(this).removeClass("far").addClass("fas");
+        } else if ($(this).hasClass("fas")) {
+          $(this).removeClass("fas").addClass("far");
+        }
+      });
+    });
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+
+</html>

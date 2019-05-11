@@ -1,0 +1,67 @@
+body {
+  background-image: url("../img/background.png");
+  background-size: cover;
+}
+
+#sign-up {
+  width: 500px;
+  margin: 10% auto;
+  background-color: rgba(58, 71, 79, 0.5);
+  padding: 1em;
+  border-radius: 25px;
+}
+
+#sign-up .logo {
+  font-family: 'Pacifico', cursive;
+  text-align: center;
+  color: white;
+  text-shadow: 2px 2px #000;
+  font-size: 5em;
+}
+
+#sign-up label {
+  color: white;
+  text-shadow: 1px 1px #000;
+}
+
+#sign-up button {
+  text-align: center;
+}
+
+.signin-prompt {
+  padding-top: 5px;
+  color: white;
+  text-shadow: 1px 1px #000;
+  text-align: center;
+}
+
+.signin-prompt a {
+  color: #a782b6;
+}
+
+.btn-primary {
+  background-color: #9163a4 !important;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #825993 !important;
+}
+
+/* ---------------------------------------- */
+
+.custom-file-container{
+  margin: 3em auto;
+  width: 75%;
+}
+
+.custom-file-container__image-clear{
+  font-size: 1.5rem;
+  color: #fff;
+}
+
+.custom-file-container__image-preview{
+  width: 140px;
+  height: 140px;
+  margin: 0 auto;
+}

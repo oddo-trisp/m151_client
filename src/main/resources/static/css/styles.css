@@ -1,0 +1,25 @@
+.row{
+  margin-left: 0;
+  margin-right: 0;
+}
+
+body {
+  padding: 1%;
+  padding-top: 80px;
+  width: 70%;
+  margin: 0 auto;
+  font-family: 'Comfortaa', sans-serif;
+  color: #404040;
+}
+
+/* screens below 991px width */
+@media (max-width: 991px) {
+}
+
+/* screens below 576px width */
+@media (max-width: 576px) {
+  body {
+    padding-top: 220px;
+    width: 100%;
+  }
+}

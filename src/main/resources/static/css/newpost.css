@@ -1,0 +1,28 @@
+form{
+  margin: 0 auto;
+  width: 70%;
+}
+
+.title-header{
+  text-align: center;
+  font-size: 1.5rem;
+  margin: 1em 0;
+}
+
+.custom-file-container{
+  margin: 3em auto;
+}
+
+.custom-file-container__image-clear{
+  font-size: 1.5rem;
+}
+
+.custom-file-container__image-preview{
+  width: 200px;
+  height: 200px;
+  margin: 0 auto;
+}
+
+textarea{
+  resize: none;
+}
