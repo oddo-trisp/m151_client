@@ -25,6 +25,7 @@ public class AppUserController {
     private static final String PROFILE = "profile";
     private static final String POST = "post";
 
+    private static final String USER_NAME = "user_name";
 
     private static final String NEW_APP_USER = "newAppUser";
     private static final String NEW_POST = "newPost";
@@ -82,7 +83,9 @@ public class AppUserController {
     }
 
     @RequestMapping(value = { "/profile" }, method = RequestMethod.GET)
-    public String profilePage(Model model) {
+    public String profilePage(Model model, Principal principal) {
+        AppUser user = restClientService.getUserData(principal.getName());
+        model.addAttribute(USER_NAME, user.getFullName());
         return PROFILE;
     }
 

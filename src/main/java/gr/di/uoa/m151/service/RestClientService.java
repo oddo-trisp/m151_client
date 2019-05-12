@@ -45,7 +45,6 @@ public class RestClientService implements UserDetailsService {
         return restTemplate.getForObject(targetUrl, AppUser.class) != null;
     }
 
-    //Test call to server api
     public AppUser signUp(AppUser newAppUser){
         newAppUser.setEncryptedPassword(bCryptPasswordEncoder.encode(newAppUser.getPassword()));
 
@@ -55,9 +54,9 @@ public class RestClientService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
 
-        URI targetUrl= UriComponentsBuilder.fromUriString(REST_SERVER)  // Build the base link
-                .path(FIND_APPUSER_BY_EMAIL)                            // Add path
-                .queryParam("email", userName)                                // Add one or more query params
+        URI targetUrl= UriComponentsBuilder.fromUriString(REST_SERVER)   // Build the base link
+                .path(FIND_APPUSER_BY_EMAIL)                             // Add path
+                .queryParam("email", userName)                     // Add one or more query params
                 .build()                                                 // Build the URL
                 .encode()                                                // Encode any URI items that need to be encoded
                 .toUri();                                                // Convert to URI
@@ -72,6 +71,17 @@ public class RestClientService implements UserDetailsService {
         System.out.println("Found User: " + appUser);
 
         return new User(appUser.getEmail(), appUser.getEncryptedPassword(), new ArrayList<>());
+    }
+
+    public AppUser getUserData(String email){
+        URI targetUrl= UriComponentsBuilder.fromUriString(REST_SERVER)  // Build the base link
+                .path(FIND_APPUSER_BY_EMAIL)                            // Add path
+                .queryParam("email", email)                       // Add one or more query params
+                .build()                                                // Build the URL
+                .encode()                                               // Encode any URI items that need to be encoded
+                .toUri();                                               // Convert to URI
+
+        return restTemplate.getForObject(targetUrl, AppUser.class);
     }
 
     public String addNewPost(String email, Post newPost){
