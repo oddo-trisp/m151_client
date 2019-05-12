@@ -9,7 +9,7 @@
   <link rel="stylesheet" th:href="@{css/styles.css}">
   <link rel="stylesheet" th:href="@{css/navbar.css}">
   <link rel="stylesheet" th:href="@{css/profile.css}">
-  <link href="https://fonts.googleapis.com/css?family=Pacifico|Raleway" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Pacifico|Raleway|Comfortaa" rel="stylesheet">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
   <!-- JQUERY -->
@@ -26,9 +26,9 @@
       <a href="#" class="btn btn-primary">Follow</a>
       <nav>
         <div class="nav nav-tabs justify-content-center" id="nav-tab" role="tablist">
-          <a class="nav-item nav-link active" id="nav-posts-tab" data-toggle="tab" href="#nav-posts" role="tab" aria-controls="nav-posts" aria-selected="true">Posts</a>
-          <a class="nav-item nav-link" id="nav-followers-tab" data-toggle="tab" href="#nav-followers" role="tab" aria-controls="nav-followers" aria-selected="false">Followers</a>
-          <a class="nav-item nav-link" id="nav-following-tab" data-toggle="tab" href="#nav-following" role="tab" aria-controls="nav-following" aria-selected="false">Following</a>
+          <a class="nav-item nav-link active" id="nav-posts-tab" data-toggle="tab" th:href="@{#nav-posts}" role="tab" aria-controls="nav-posts" aria-selected="true">Posts</a>
+          <a class="nav-item nav-link" id="nav-followers-tab" data-toggle="tab" th:href="@{#nav-followers}" role="tab" aria-controls="nav-followers" aria-selected="false">Followers</a>
+          <a class="nav-item nav-link" id="nav-following-tab" data-toggle="tab" th:href="@{#nav-following}" role="tab" aria-controls="nav-following" aria-selected="false">Following</a>
         </div>
       </nav>
       <div class="tab-content" id="nav-tabContent">
@@ -56,7 +56,7 @@
             </div>
           </div>
         </div>
-        <div class="tab-pane fade" class="nav-followers" role="tabpanel" aria-labelledby="nav-followers-tab">
+        <div class="tab-pane fade" id="nav-followers" role="tabpanel" aria-labelledby="nav-followers-tab">
           <div class="followers row">
             <div class="col-md-3 col-sm-12"><a th:href="@{/profile}"><img src="img/friends.png" alt=""></a><p>Name Surname</p></div>
             <div class="col-md-3 col-sm-12"><a th:href="@{/profile}"><img src="img/friends.png" alt=""></a><p>Name Surname</p></div>
@@ -64,7 +64,7 @@
             <div class="col-md-3 col-sm-12"><a th:href="@{/profile}"><img src="img/friends.png" alt=""></a><p>Name Surname</p></div>
           </div>
         </div>
-        <div class="tab-pane fade" class="nav-followers" role="tabpanel" aria-labelledby="nav-followers-tab">
+        <div class="tab-pane fade" id="nav-following" role="tabpanel" aria-labelledby="nav-followers-tab">
           <div class="followers row">
             <div class="col-md-3 col-sm-12"><a th:href="@{/profile}"><img src="img/friends.png" alt=""></a><p>Name Surname</p></div>
             <div class="col-md-3 col-sm-12"><a th:href="@{/profile}"><img src="img/friends.png" alt=""></a><p>Name Surname</p></div>
