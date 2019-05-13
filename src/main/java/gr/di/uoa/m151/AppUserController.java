@@ -86,6 +86,7 @@ public class AppUserController {
     public String profilePage(Model model, Principal principal) {
         AppUser user = restClientService.getUserData(principal.getName());
         model.addAttribute(USER_NAME, user.getFullName());
+        model.addAttribute("posts",user.getPosts());
         return PROFILE;
     }
 
