@@ -1,0 +1,12 @@
+html, body{
+    background-color: #c25b5b;
+}
+
+.error-page{
+    color: white;
+    text-align: center;
+}
+
+.error-banner{
+    font-size: 3rem;
+}
