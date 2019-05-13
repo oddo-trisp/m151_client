@@ -39,14 +39,16 @@
       </div>
 
       <div class="form-popup" id="comment-form" style="display: none;">
-        <form action="/" class="form-container">
+        <form action="/addUserPostReaction" class="form-container" method="POST" th:object="${commentReaction}">
           <div class="form-group">
             <label><b>Title</b></label>
-            <input class="form-control" type="text" placeholder="Enter title" name="title" required>
+            <input class="form-control" type="text" placeholder="Enter title" name="title"
+                   th:required="required" th:field="*{commentTitle}" >
           </div>
           <div class="form-group">
             <label><b>Text</b></label>
-            <textarea class="form-control" placeholder="Enter text" rows="7" name="text"></textarea>
+            <textarea class="form-control" placeholder="Enter text" rows="7" name="text"
+                      th:required="required" th:field="*{commentText}" ></textarea>
           </div>
           <button type="submit" class="btn">Add</button>
           <button type="button" class="btn cancel" onclick="closeForm()">Close</button>

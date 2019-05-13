@@ -1,15 +1,17 @@
 package gr.di.uoa.m151;
 
 import gr.di.uoa.m151.entity.AppUser;
+import gr.di.uoa.m151.entity.CommentReaction;
 import gr.di.uoa.m151.entity.Post;
+import gr.di.uoa.m151.entity.UserPostReaction;
 import gr.di.uoa.m151.service.RestClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 
 @Controller
@@ -24,6 +26,8 @@ public class AppUserController {
     private static final String PEOPLE = "people";
     private static final String PROFILE = "profile";
     private static final String POST = "post";
+    private static final String POSTS = "posts";
+    private static final String COMMENT_REACTION = "commentReaction";
 
     private static final String USER_NAME = "user_name";
 
@@ -43,15 +47,13 @@ public class AppUserController {
 
     @RequestMapping(value = "/signup", method = RequestMethod.GET)
     public String signUpPage(Model model) {
-        AppUser newAppUser = new AppUser();
-        model.addAttribute(NEW_APP_USER, newAppUser);
+        model.addAttribute(NEW_APP_USER, new AppUser());
         return SIGN_UP;
     }
 
     @RequestMapping(value = "/signin", method = RequestMethod.GET)
     public String signInPage(Model model) {
-        AppUser newAppUser = new AppUser();
-        model.addAttribute(NEW_APP_USER, newAppUser);
+        model.addAttribute(NEW_APP_USER, new AppUser());
         return SIGN_IN;
     }
 
@@ -66,13 +68,12 @@ public class AppUserController {
 
     @RequestMapping(value = {"/newpost"}, method = RequestMethod.GET)
     public String newpostPage(Model model) {
-        Post newPost = new Post();
-        model.addAttribute(NEW_POST, newPost);
+        model.addAttribute(NEW_POST, new Post());
         return NEWPOST;
     }
 
     @RequestMapping(value = "/addNewPost", method = RequestMethod.POST)
-    public String registrationPage(@ModelAttribute Post newPost, Principal principal) {
+    public String addNewPost(@ModelAttribute Post newPost, Principal principal) {
         return restClientService.addNewPost(principal.getName(), newPost) != null
                 ? INDEX : NEWPOST;
     }
@@ -86,13 +87,28 @@ public class AppUserController {
     public String profilePage(Model model, Principal principal) {
         AppUser user = restClientService.getUserData(principal.getName());
         model.addAttribute(USER_NAME, user.getFullName());
-        model.addAttribute("posts",user.getPosts());
+        model.addAttribute(POSTS,user.getPosts());
         return PROFILE;
+    }
+
+    @RequestMapping(value = {"/post/{id}" }, method = RequestMethod.GET)
+    public String postPage(@PathVariable Long id, RedirectAttributes ra) {
+        Post post = restClientService.getPostData(id);
+        ra.addFlashAttribute(POST, post);
+        return "redirect:/post";
     }
 
     @RequestMapping(value = {"/post" }, method = RequestMethod.GET)
     public String postPage(Model model) {
+        UserPostReaction commentReaction = new CommentReaction();
+        model.addAttribute(COMMENT_REACTION ,commentReaction);
         return POST;
+    }
+
+    @RequestMapping(value = "/addUserPostReaction", method = RequestMethod.POST)
+    public String addUserPostReaction(@ModelAttribute CommentReaction commentReaction, Principal principal, Model model) {
+        return restClientService.addUserPostReaction(principal.getName(), commentReaction) != null
+                ? PROFILE : POST;
     }
 }
 

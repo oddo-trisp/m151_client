@@ -2,6 +2,7 @@ package gr.di.uoa.m151.service;
 
 import gr.di.uoa.m151.entity.AppUser;
 import gr.di.uoa.m151.entity.Post;
+import gr.di.uoa.m151.entity.UserPostReaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,8 +15,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 public class RestClientService implements UserDetailsService {
@@ -29,9 +28,10 @@ public class RestClientService implements UserDetailsService {
 
     private final String REST_SERVER = "http://localhost:8280/";
     private final String SIGN_UP = "signup";
-    private final String SIGN_IN = "signin";
     private final String FIND_APPUSER_BY_EMAIL = "findAppUserByEmail";
+    private final String FIND_POST_BY_ID = "findPostById";
     private final String ADD_NEW_POST = "addNewPost";
+    private final String ADD_USER_POST_REACTION = "addUserPostReaction";
 
 
     public boolean checkIfAppUserExists(String email){
@@ -84,6 +84,17 @@ public class RestClientService implements UserDetailsService {
         return restTemplate.getForObject(targetUrl, AppUser.class);
     }
 
+    public Post getPostData(Long id){
+        URI targetUrl= UriComponentsBuilder.fromUriString(REST_SERVER)  // Build the base link
+                .path(FIND_POST_BY_ID)                            // Add path
+                .queryParam("id", id)                       // Add one or more query params
+                .build()                                                // Build the URL
+                .encode()                                               // Encode any URI items that need to be encoded
+                .toUri();                                               // Convert to URI
+
+        return restTemplate.getForObject(targetUrl, Post.class);
+    }
+
     public String addNewPost(String email, Post newPost){
 
         URI targetUrl= UriComponentsBuilder.fromUriString(REST_SERVER)  // Build the base link
@@ -94,5 +105,17 @@ public class RestClientService implements UserDetailsService {
                 .toUri();                                                // Convert to URI
 
         return restTemplate.postForEntity(targetUrl, newPost, String.class).getBody();
+    }
+
+    public Post addUserPostReaction(String email, UserPostReaction userPostReaction){
+
+        URI targetUrl= UriComponentsBuilder.fromUriString(REST_SERVER)  // Build the base link
+                .path(ADD_USER_POST_REACTION)                                     // Add path
+                .queryParam("email", email)                      // Add one or more query params
+                .build()                                                 // Build the URL
+                .encode()                                                // Encode any URI items that need to be encoded
+                .toUri();                                                // Convert to URI
+
+        return restTemplate.postForObject(targetUrl, userPostReaction, Post.class);
     }
 }

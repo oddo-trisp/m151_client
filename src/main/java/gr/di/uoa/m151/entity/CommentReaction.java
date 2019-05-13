@@ -11,7 +11,17 @@ public class CommentReaction extends UserPostReaction {
         super(post, appUser);
     }
 
+    private String commentTitle;
+
     private String commentText;
+
+    public String getCommentTitle() {
+        return commentTitle;
+    }
+
+    public void setCommentTitle(String commentTitle) {
+        this.commentTitle = commentTitle;
+    }
 
     public String getCommentText() {
         return commentText;
@@ -20,4 +30,5 @@ public class CommentReaction extends UserPostReaction {
     public void setCommentText(String commentText) {
         this.commentText = commentText;
     }
+
 }
