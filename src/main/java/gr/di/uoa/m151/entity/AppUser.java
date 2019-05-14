@@ -20,9 +20,6 @@ public class AppUser implements Serializable {
 
     private List<Post> posts = new ArrayList<>();
 
-    private List<UserPostReaction> postReactions = new ArrayList<>();
-
-
     public Long getId() {
         return id;
     }
@@ -61,18 +58,6 @@ public class AppUser implements Serializable {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-    }
-
-    public List<UserPostReaction> getPostReactions() {
-        return postReactions;
-    }
-
-    public void setPostReactions(List<UserPostReaction> postReactions) {
-        this.postReactions = postReactions;
-    }
-
-    public void removePostReaction(UserPostReaction userPostReaction){
-        postReactions.remove(userPostReaction);
     }
 
     public List<Post> getPosts() {

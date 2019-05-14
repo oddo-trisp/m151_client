@@ -2,13 +2,19 @@ package gr.di.uoa.m151.entity;
 
 import java.io.Serializable;
 
-public abstract class UserPostReaction implements Serializable {
+public class UserPostReaction implements Serializable {
 
     private Long id;
 
     private Post post;
 
     private AppUser appUser;
+
+    private String commentTitle;
+
+    private String commentText;
+
+    private String reactionType;
 
     public UserPostReaction() {
     }
@@ -40,5 +46,29 @@ public abstract class UserPostReaction implements Serializable {
 
     public void setAppUser(AppUser appUser) {
         this.appUser = appUser;
+    }
+
+    public String getCommentTitle() {
+        return commentTitle;
+    }
+
+    public void setCommentTitle(String commentTitle) {
+        this.commentTitle = commentTitle;
+    }
+
+    public String getCommentText() {
+        return commentText;
+    }
+
+    public void setCommentText(String commentText) {
+        this.commentText = commentText;
+    }
+
+    public String getReactionType() {
+        return reactionType;
+    }
+
+    public void setReactionType(String reactionType) {
+        this.reactionType = reactionType;
     }
 }

@@ -1,7 +1,6 @@
 package gr.di.uoa.m151;
 
 import gr.di.uoa.m151.entity.AppUser;
-import gr.di.uoa.m151.entity.CommentReaction;
 import gr.di.uoa.m151.entity.Post;
 import gr.di.uoa.m151.entity.UserPostReaction;
 import gr.di.uoa.m151.service.RestClientService;
@@ -11,7 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.HashMap;
@@ -122,20 +120,19 @@ public class AppUserController {
 
     @RequestMapping(value = {"/post" }, method = RequestMethod.GET)
     public String postPage(Model model) {
-        CommentReaction commentReaction = new CommentReaction();
+        UserPostReaction commentReaction = new UserPostReaction();
         model.addAttribute(COMMENT_REACTION ,commentReaction);
         Post post = (Post) model.asMap().get(CURRENT_POST);
-        List<CommentReaction> comments = post.getUserReactions()
+        List<UserPostReaction> comments = post.getUserReactions()
                 .stream()
-                .filter(r -> r instanceof CommentReaction)
-                .map(r -> (CommentReaction)r)
+                .filter(r -> r.getReactionType().equals("COMMENT"))
                 .collect(Collectors.toList());
         model.addAttribute(COMMENTS , comments);
         return POST;
     }
 
     @RequestMapping(value = "//addCommentReaction/{id}", method = RequestMethod.POST)
-    public String addUserPostReaction(@PathVariable Long id, @ModelAttribute CommentReaction commentReaction, Principal principal, Model model) {
+    public String addUserPostReaction(@PathVariable Long id, @ModelAttribute UserPostReaction commentReaction, Principal principal, Model model) {
         return restClientService.addCommentReaction(principal.getName(), id, commentReaction) != null
                 ? PROFILE : POST;
     }

@@ -57,7 +57,7 @@
           <div class="card-body">
               <p class="comment-title card-title" th:text="${comment.commentTitle}"></p>
               <p class="comment-text card-text" th:text="${comment.commentText}"></p>
-              <p class="author-name"><a th:href="@{/profile}" th:text="${comment.appUser.getFullName()}"></a></p>
+              <p class="author-name"><a th:href="@{/profile}" th:text="${comment.appUser}"></a></p>
           </div>
         </div>
 

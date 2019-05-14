@@ -66,29 +66,4 @@ public class Post {
     public void setUserReactions(List<UserPostReaction> userReactions) {
         this.userReactions = userReactions;
     }
-
-    public void addUserReaction(AppUser appUser) {
-        UserPostReaction userPostReaction = new LikeReaction(this, appUser);
-        userReactions.add(userPostReaction);
-    }
-
-    public void removeUserReaction(AppUser appUser) {
-        userReactions.stream()
-                .filter(ur -> this.equals(ur.getPost()))
-                .filter(ur -> appUser.equals(ur.getAppUser()))
-                .forEach(ur ->{
-                    userReactions.remove(ur);
-                    ur.getAppUser().removePostReaction(ur);
-                    ur.setPost(null);
-                    ur.setAppUser(null);
-                });
-        //userReactions.forEach(ur -> {
-        //    if(ur.getPost().equals(this) && ur.getAppUser().equals(appUser)){
-        //        userReactions.remove(ur);
-        //        ur.getAppUser().getPostReactions().remove(ur);
-        //        ur.setPost(null);
-        //        ur.setAppUser(null);
-        //    }
-        //});
-    }
 }
