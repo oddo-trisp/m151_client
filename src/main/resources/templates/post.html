@@ -21,17 +21,13 @@
 
   <div class="container-fluid">
     <header id="navigation" th:include="html_components/navbar"></header>
-    <p class="title-header">Post's title goes here</p>
+    <p class="title-header" th:text="${currentPost.postTitle}"></p>
     <section class="post">
       <article class="post-img row">
         <img src="img/post/cheeseburger.png" alt="">
       </article>
       <article class="post-desc row">
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dignissimos architecto magni, inventore eveniet
-          atque veritatis consequatur doloremque, ratione, fuga sint corrupti quas dolores debitis. Commodi, obcaecati qui autem dolor totam.
-          Ea iure porro, illo commodi amet blanditiis accusantium numquam explicabo fugit saepe veniam enim, repudiandae cum magnam architecto,
-          odio minima ex deserunt mollitia alias dolores quidem necessitatibus inventore officiis! Beatae?
-        </p>
+        <p th:text="${currentPost.postText}"></p>
       </article>
       <div class="post-buttons">
         <div class="action like-action"><i class="far fa-heart"></i></div>
@@ -39,7 +35,7 @@
       </div>
 
       <div class="form-popup" id="comment-form" style="display: none;">
-        <form action="/addUserPostReaction" class="form-container" method="POST" th:object="${commentReaction}">
+        <form th:action="@{'/addCommentReaction/'+${currentPost.id}}" class="form-container" method="POST" th:object="${commentReaction}">
           <div class="form-group">
             <label><b>Title</b></label>
             <input class="form-control" type="text" placeholder="Enter title" name="title"
@@ -57,22 +53,14 @@
 
       <article class="comments row">
         <p class="title-header">Comments</p>
-        <div class="comment card">
+        <div class="comment card" th:each="comment:${comments}">
           <div class="card-body">
-            <p class="comment-title card-title">Amazing burger</p>
-            <p class="comment-text card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Possimus praesentium, illo nobis dolorum eaque reprehenderit aliquid nostrum ab, harum quo necessitatibus consequatur saepe quia beatae in id!
-              Quia, dolor, impedit.</p>
-            <p class="author-name"><a th:href="@{/profile}">George Apostolopoulos</a></p>
+              <p class="comment-title card-title" th:text="${comment.commentTitle}"></p>
+              <p class="comment-text card-text" th:text="${comment.commentText}"></p>
+              <p class="author-name"><a th:href="@{/profile}" th:text="${comment.appUser.getFullName()}"></a></p>
           </div>
         </div>
-        <div class="comment card">
-          <div class="card-body">
-            <p class="comment-title card-title">Amazing burger</p>
-            <p class="comment-text card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Possimus praesentium, illo nobis dolorum eaque reprehenderit aliquid nostrum ab, harum quo necessitatibus consequatur saepe quia beatae in id!
-              Quia, dolor, impedit.</p>
-            <p class="author-name"><a th:href="@{/profile}">George Apostolopoulos</a></p>
-          </div>
-        </div>
+
       </article>
     </section>
   </div>

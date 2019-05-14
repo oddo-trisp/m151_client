@@ -26,12 +26,12 @@ public class RestClientService implements UserDetailsService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
-    private final String REST_SERVER = "http://localhost:8280/";
+    private final String REST_SERVER = "http://localhost:8580/";
     private final String SIGN_UP = "signup";
     private final String FIND_APPUSER_BY_EMAIL = "findAppUserByEmail";
     private final String FIND_POST_BY_ID = "findPostById";
     private final String ADD_NEW_POST = "addNewPost";
-    private final String ADD_USER_POST_REACTION = "addUserPostReaction";
+    private final String ADD_COMMENT_REACTION = "addCommentReaction";
 
 
     public boolean checkIfAppUserExists(String email){
@@ -95,7 +95,7 @@ public class RestClientService implements UserDetailsService {
         return restTemplate.getForObject(targetUrl, Post.class);
     }
 
-    public String addNewPost(String email, Post newPost){
+    public AppUser addNewPost(String email, Post newPost){
 
         URI targetUrl= UriComponentsBuilder.fromUriString(REST_SERVER)  // Build the base link
                 .path(ADD_NEW_POST)                                     // Add path
@@ -104,14 +104,15 @@ public class RestClientService implements UserDetailsService {
                 .encode()                                                // Encode any URI items that need to be encoded
                 .toUri();                                                // Convert to URI
 
-        return restTemplate.postForEntity(targetUrl, newPost, String.class).getBody();
+        return restTemplate.postForObject(targetUrl, newPost, AppUser.class);
     }
 
-    public Post addUserPostReaction(String email, UserPostReaction userPostReaction){
+    public Post addCommentReaction(String email, Long postId ,UserPostReaction userPostReaction){
 
         URI targetUrl= UriComponentsBuilder.fromUriString(REST_SERVER)  // Build the base link
-                .path(ADD_USER_POST_REACTION)                                     // Add path
+                .path(ADD_COMMENT_REACTION)                                     // Add path
                 .queryParam("email", email)                      // Add one or more query params
+                .queryParam("postId", postId)                      // Add one or more query params
                 .build()                                                 // Build the URL
                 .encode()                                                // Encode any URI items that need to be encoded
                 .toUri();                                                // Convert to URI

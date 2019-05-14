@@ -12,9 +12,15 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
+@SessionAttributes({ "currentAppUser", "currentPost", "userPostsMap"})
 public class AppUserController {
 
     private final RestClientService restClientService;
@@ -26,8 +32,10 @@ public class AppUserController {
     private static final String PEOPLE = "people";
     private static final String PROFILE = "profile";
     private static final String POST = "post";
+    private static final String CURRENT_POST = "currentPost";
     private static final String POSTS = "posts";
     private static final String COMMENT_REACTION = "commentReaction";
+    private static final String COMMENTS = "comments";
 
     private static final String USER_NAME = "user_name";
 
@@ -84,30 +92,51 @@ public class AppUserController {
     }
 
     @RequestMapping(value = { "/profile" }, method = RequestMethod.GET)
-    public String profilePage(Model model, Principal principal) {
-        AppUser user = restClientService.getUserData(principal.getName());
+    public String profilePage(Model model, Principal principal, HttpSession session) {
+        AppUser user = (AppUser) session.getAttribute("currentAppUser");
+        if(user == null){
+            user =restClientService.getUserData(principal.getName());
+            session.setAttribute("currentAppUser", user);
+        }
         model.addAttribute(USER_NAME, user.getFullName());
         model.addAttribute(POSTS,user.getPosts());
+        Map<Long, Post> userPostsMap = user.getPosts().stream().collect(Collectors.toMap(Post::getId, p -> p));
+        session.setAttribute("userPostsMap", userPostsMap);
+
         return PROFILE;
     }
 
     @RequestMapping(value = {"/post/{id}" }, method = RequestMethod.GET)
-    public String postPage(@PathVariable Long id, RedirectAttributes ra) {
-        Post post = restClientService.getPostData(id);
-        ra.addFlashAttribute(POST, post);
+    public String postPage(@PathVariable Long id, RedirectAttributes ra, HttpSession session) {
+        Map<Long, Post> userPostsMap = (Map<Long, Post>) session.getAttribute("userPostsMap");
+        if(userPostsMap == null) userPostsMap = new HashMap<>();
+        Post post = userPostsMap.getOrDefault(id, null);
+        if(post == null){
+            post = restClientService.getPostData(id);
+            userPostsMap.put(id, post);
+        }
+        session.setAttribute("userPostsMap", userPostsMap);
+        ra.addFlashAttribute(CURRENT_POST, post);
         return "redirect:/post";
     }
 
     @RequestMapping(value = {"/post" }, method = RequestMethod.GET)
     public String postPage(Model model) {
-        UserPostReaction commentReaction = new CommentReaction();
+        CommentReaction commentReaction = new CommentReaction();
         model.addAttribute(COMMENT_REACTION ,commentReaction);
+        Post post = (Post) model.asMap().get(CURRENT_POST);
+        List<CommentReaction> comments = post.getUserReactions()
+                .stream()
+                .filter(r -> r instanceof CommentReaction)
+                .map(r -> (CommentReaction)r)
+                .collect(Collectors.toList());
+        model.addAttribute(COMMENTS , comments);
         return POST;
     }
 
-    @RequestMapping(value = "/addUserPostReaction", method = RequestMethod.POST)
-    public String addUserPostReaction(@ModelAttribute CommentReaction commentReaction, Principal principal, Model model) {
-        return restClientService.addUserPostReaction(principal.getName(), commentReaction) != null
+    @RequestMapping(value = "//addCommentReaction/{id}", method = RequestMethod.POST)
+    public String addUserPostReaction(@PathVariable Long id, @ModelAttribute CommentReaction commentReaction, Principal principal, Model model) {
+        return restClientService.addCommentReaction(principal.getName(), id, commentReaction) != null
                 ? PROFILE : POST;
     }
 }
