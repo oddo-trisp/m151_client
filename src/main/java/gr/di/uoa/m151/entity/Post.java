@@ -12,6 +12,8 @@ public class Post {
 
     private String postText;
 
+    private String postImage;
+
     private Timestamp creationDate;
 
     private AppUser appUser;
@@ -41,6 +43,14 @@ public class Post {
 
     public void setPostText(String postText) {
         this.postText = postText;
+    }
+
+    public String getPostImage() {
+        return postImage;
+    }
+
+    public void setPostImage(String postImage) {
+        this.postImage = postImage;
     }
 
     public Timestamp getCreationDate() {

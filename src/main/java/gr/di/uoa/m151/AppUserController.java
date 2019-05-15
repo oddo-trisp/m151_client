@@ -1,5 +1,12 @@
 package gr.di.uoa.m151;
 
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.opsworks.model.App;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import gr.di.uoa.m151.entity.AppUser;
 import gr.di.uoa.m151.entity.Post;
 import gr.di.uoa.m151.entity.UserPostReaction;
@@ -8,9 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
@@ -53,6 +64,7 @@ public class AppUserController {
 
     @RequestMapping(value = "/signup", method = RequestMethod.GET)
     public String signUpPage(Model model) {
+        //restClientService.uploadImageOnS3();
         model.addAttribute(NEW_APP_USER, new AppUser());
         return SIGN_UP;
     }
@@ -65,7 +77,11 @@ public class AppUserController {
 
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public String registrationPage(@ModelAttribute AppUser newAppUser) {
+    public String registrationPage(@ModelAttribute AppUser newAppUser, @RequestParam("file") MultipartFile file) {
+        if(!restClientService.checkIfAppUserExists(newAppUser.getEmail())) {
+            restClientService.uploadImageOnS3(newAppUser.getId(), file, 0);
+            // upload the image on S3. Number 0 means it's a profile image for user newAppUser.
+        }
         return restClientService.checkIfAppUserExists(newAppUser.getEmail()) ? SIGN_UP
                 : restClientService.signUp(newAppUser) != null
                 ? SIGN_IN : SIGN_UP;
@@ -79,7 +95,10 @@ public class AppUserController {
     }
 
     @RequestMapping(value = "/addNewPost", method = RequestMethod.POST)
-    public String addNewPost(@ModelAttribute Post newPost, Principal principal) {
+    public String addNewPost(@ModelAttribute Post newPost, Principal principal, @RequestParam("file") MultipartFile file) {
+        AppUser appUser = restClientService.getUserData(principal.getName());
+        restClientService.uploadImageOnS3(appUser.getId(), file, 1);
+        // upload the image on S3. Number 1 means it's a post image for principal user in the current session.
         return restClientService.addNewPost(principal.getName(), newPost) != null
                 ? INDEX : NEWPOST;
     }

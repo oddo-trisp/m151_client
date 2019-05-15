@@ -16,6 +16,8 @@ public class AppUser implements Serializable {
 
     private String encryptedPassword;
 
+    private String userImage;
+
     private boolean enabled = true;
 
     private List<Post> posts = new ArrayList<>();
@@ -51,6 +53,10 @@ public class AppUser implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public String getUserImage() { return userImage; }
+
+    public void setUserImage(String userImage) { this.userImage = userImage; }
 
     public boolean isEnabled() {
         return enabled;
