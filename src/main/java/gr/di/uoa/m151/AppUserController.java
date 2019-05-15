@@ -95,12 +95,22 @@ public class AppUserController {
     }
 
     @RequestMapping(value = "/addNewPost", method = RequestMethod.POST)
-    public String addNewPost(@ModelAttribute Post newPost, Principal principal, @RequestParam("file") MultipartFile file) {
-        AppUser appUser = restClientService.getUserData(principal.getName());
-        restClientService.uploadImageOnS3(appUser.getId(), file, 1);
+    public String addNewPost(@ModelAttribute Post newPost, Principal principal, @RequestParam("file") MultipartFile file, HttpSession session) {
+
         // upload the image on S3. Number 1 means it's a post image for principal user in the current session.
-        return restClientService.addNewPost(principal.getName(), newPost) != null
-                ? INDEX : NEWPOST;
+        AppUser appUser = (AppUser) session.getAttribute("currentAppUser");
+        if(appUser == null)
+            appUser =restClientService.getUserData(principal.getName());
+
+        restClientService.uploadImageOnS3(appUser.getId(), file, 1);
+
+        appUser = restClientService.addNewPost(principal.getName(), newPost);
+        if(appUser != null){
+            session.setAttribute("currentAppUser", appUser);
+            return INDEX;
+        }
+        else
+            return NEWPOST;
     }
 
     @RequestMapping(value = { "/people" }, method = RequestMethod.GET)
