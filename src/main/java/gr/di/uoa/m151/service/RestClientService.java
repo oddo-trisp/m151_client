@@ -88,26 +88,31 @@ public class RestClientService implements UserDetailsService {
                 .build();
     }
 
-    public void uploadImageOnS3(Long userId, MultipartFile file, int p){
+    public void uploadImageOnS3(String email, MultipartFile file, int p){
 
         AmazonS3 s3client = buildS3client();
         try {
-            String fn = file.getOriginalFilename(); // original filename
             InputStream is = file.getInputStream();
             // The filename has the format userId_fn (eg. 18_me.png) which means user with id = 18 has profile image named
             // me.png. Adding the userId makes sure that there will never be an image with the same name.
-            String fileName;
-            if(p==0) { // if p == 0 we add picture to the profile folder on S3
-                fileName = "profile/" + userId + "_" + fn;
-            } else { // else we add picture to the post folder on S3
-                fileName = "post/" + userId + "_" + fn;
-            }
+            String fileName = generateFileNameForS3(email, file, p);
             s3client.putObject(new PutObjectRequest(bucketName,fileName,is,new ObjectMetadata())
                     .withCannedAcl(CannedAccessControlList.PublicRead));
         } catch (IOException ioe) {
             System.out.println("IOException when writing on S3");
         }
 
+    }
+
+    public String generateFileNameForS3(String email, MultipartFile file, int p){
+        String fileName;
+        String fn = file.getOriginalFilename(); // original filename
+        if(p==0) { // if p == 0 we add picture to the profile folder on S3
+            fileName = "profile/" + email + "_" + fn;
+        } else { // else we add picture to the post folder on S3
+            fileName = "post/" + email + "_" + fn;
+        }
+        return fileName;
     }
 
     @Override

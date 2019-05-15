@@ -78,13 +78,21 @@ public class AppUserController {
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
     public String registrationPage(@ModelAttribute AppUser newAppUser, @RequestParam("file") MultipartFile file) {
-        if(!restClientService.checkIfAppUserExists(newAppUser.getEmail())) {
-            restClientService.uploadImageOnS3(newAppUser.getId(), file, 0);
+        boolean userExists = restClientService.checkIfAppUserExists(newAppUser.getEmail());
+        if(!userExists) {
+
+            String fileName = restClientService.generateFileNameForS3(newAppUser.getEmail(), file, 0);
+            newAppUser.setUserImage(fileName);
             // upload the image on S3. Number 0 means it's a profile image for user newAppUser.
+            AppUser persistedUser = restClientService.signUp(newAppUser);
+            if(persistedUser != null){
+                restClientService.uploadImageOnS3(persistedUser.getEmail(), file, 0);
+                return SIGN_IN;
+            }
+            else return SIGN_UP;
         }
-        return restClientService.checkIfAppUserExists(newAppUser.getEmail()) ? SIGN_UP
-                : restClientService.signUp(newAppUser) != null
-                ? SIGN_IN : SIGN_UP;
+        else
+            return SIGN_UP;
     }
 
 
@@ -102,11 +110,13 @@ public class AppUserController {
         if(appUser == null)
             appUser =restClientService.getUserData(principal.getName());
 
-        restClientService.uploadImageOnS3(appUser.getId(), file, 1);
-
+        String fileName = restClientService.generateFileNameForS3(appUser.getEmail(), file, 1);
+        newPost.setPostImage(fileName);
         appUser = restClientService.addNewPost(principal.getName(), newPost);
+
         if(appUser != null){
             session.setAttribute("currentAppUser", appUser);
+            restClientService.uploadImageOnS3(appUser.getEmail(), file, 1);
             return INDEX;
         }
         else
