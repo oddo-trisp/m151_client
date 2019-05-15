@@ -170,10 +170,18 @@ public class AppUserController {
         return POST;
     }
 
-    @RequestMapping(value = "//addCommentReaction/{id}", method = RequestMethod.POST)
-    public String addUserPostReaction(@PathVariable Long id, @ModelAttribute UserPostReaction commentReaction, Principal principal, Model model) {
-        return restClientService.addCommentReaction(principal.getName(), id, commentReaction) != null
-                ? PROFILE : POST;
+    @RequestMapping(value = "/addCommentReaction/{id}", method = RequestMethod.POST)
+    public String addUserPostReaction(@PathVariable Long id, @ModelAttribute UserPostReaction commentReaction, Principal principal, Model model, HttpSession session) {
+        Post persistedPost = restClientService.addCommentReaction(principal.getName(), id, commentReaction);
+        if(persistedPost != null){
+
+            Map<Long, Post> userPostsMap = (Map<Long, Post>) session.getAttribute("userPostsMap");
+            userPostsMap.put(persistedPost.getId(), persistedPost);
+            session.setAttribute("userPostsMap", userPostsMap);
+
+            return "redirect:/profile";
+        }
+        else return POST;
     }
 }
 

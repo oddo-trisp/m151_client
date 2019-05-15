@@ -16,6 +16,14 @@ public class UserPostReaction implements Serializable {
 
     private String reactionType;
 
+    private String userEmail;
+
+    private String userFullName;
+
+    private String userImage;
+
+
+
     public UserPostReaction() {
     }
 
@@ -70,5 +78,29 @@ public class UserPostReaction implements Serializable {
 
     public void setReactionType(String reactionType) {
         this.reactionType = reactionType;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public String getUserFullName() {
+        return userFullName;
+    }
+
+    public void setUserFullName(String userFullName) {
+        this.userFullName = userFullName;
+    }
+
+    public String getUserImage() {
+        return userImage;
+    }
+
+    public void setUserImage(String userImage) {
+        this.userImage = userImage;
     }
 }
