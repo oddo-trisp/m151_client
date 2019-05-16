@@ -16,7 +16,7 @@ public class AppUser implements Serializable {
 
     private String encryptedPassword;
 
-    private String userImage;
+    private String userImage = "";
 
     private boolean enabled = true;
 

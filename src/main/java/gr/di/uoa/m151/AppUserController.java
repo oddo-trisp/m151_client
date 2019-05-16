@@ -1,12 +1,5 @@
 package gr.di.uoa.m151;
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.opsworks.model.App;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import gr.di.uoa.m151.entity.AppUser;
 import gr.di.uoa.m151.entity.Post;
 import gr.di.uoa.m151.entity.UserPostReaction;
@@ -19,9 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
@@ -137,8 +127,7 @@ public class AppUserController {
         model.addAttribute(USER_NAME, user.getFullName());
         model.addAttribute(POSTS,user.getPosts());
 
-        String imageStreamFile = user.getUserImage() != null ? restClientService.downloadImageFromS3(user.getUserImage()) : "";
-        model.addAttribute(IMAGE,imageStreamFile);
+        model.addAttribute(IMAGE,user.getUserImage());
 
         Map<Long, Post> userPostsMap = user.getPosts().stream().collect(Collectors.toMap(Post::getId, p -> p));
         session.setAttribute("userPostsMap", userPostsMap);
@@ -173,8 +162,7 @@ public class AppUserController {
                 .filter(r -> r.getReactionType().equals("COMMENT"))
                 .collect(Collectors.toList());
         model.addAttribute(COMMENTS , comments);
-        String imageStreamFile = post.getPostImage() != null ? restClientService.downloadImageFromS3(post.getPostImage()) : "";
-        model.addAttribute(IMAGE,imageStreamFile);
+        model.addAttribute(IMAGE,post.getPostImage());
         return POST;
     }
 

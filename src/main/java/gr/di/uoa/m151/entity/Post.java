@@ -12,7 +12,7 @@ public class Post {
 
     private String postText;
 
-    private String postImage;
+    private String postImage = "";
 
     private Timestamp creationDate;
 
