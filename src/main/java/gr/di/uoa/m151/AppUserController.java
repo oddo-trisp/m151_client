@@ -34,6 +34,7 @@ public class AppUserController {
 
     private final RestClientService restClientService;
 
+    private static final String IMAGE = "image";
     private static final String INDEX = "index";
     private static final String SIGN_UP = "signup";
     private static final String SIGN_IN = "signin";
@@ -137,6 +138,10 @@ public class AppUserController {
         }
         model.addAttribute(USER_NAME, user.getFullName());
         model.addAttribute(POSTS,user.getPosts());
+
+        String imageStreamFile = restClientService.downloadImageFromS3(user.getUserImage());
+        model.addAttribute(IMAGE,imageStreamFile);
+
         Map<Long, Post> userPostsMap = user.getPosts().stream().collect(Collectors.toMap(Post::getId, p -> p));
         session.setAttribute("userPostsMap", userPostsMap);
 
@@ -167,6 +172,8 @@ public class AppUserController {
                 .filter(r -> r.getReactionType().equals("COMMENT"))
                 .collect(Collectors.toList());
         model.addAttribute(COMMENTS , comments);
+        String imageStreamFile = restClientService.downloadImageFromS3(post.getPostImage());
+        model.addAttribute(IMAGE,imageStreamFile);
         return POST;
     }
 

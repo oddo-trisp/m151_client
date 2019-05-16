@@ -24,7 +24,7 @@
     <p class="title-header" th:text="${currentPost.postTitle}"></p>
     <section class="post">
       <article class="post-img row">
-        <img src="img/post/cheeseburger.png" alt="">
+        <img th:src="${image}" alt=""/>
       </article>
       <article class="post-desc row">
         <p th:text="${currentPost.postText}"></p>

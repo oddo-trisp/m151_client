@@ -6,10 +6,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.Bucket;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.*;
 import gr.di.uoa.m151.entity.AppUser;
 import gr.di.uoa.m151.entity.Post;
 import gr.di.uoa.m151.entity.UserPostReaction;
@@ -108,11 +105,23 @@ public class RestClientService implements UserDetailsService {
         String fileName;
         String fn = file.getOriginalFilename(); // original filename
         if(p==0) { // if p == 0 we add picture to the profile folder on S3
-            fileName = "profile/" + email + "_" + fn;
+            fileName = "profile/" + email + "/" + fn;
         } else { // else we add picture to the post folder on S3
-            fileName = "post/" + email + "_" + fn;
+            fileName = "post/" + email + "/" + fn;
         }
         return fileName;
+    }
+
+    public String downloadImageFromS3(String imagePath){
+
+        AmazonS3 s3client = buildS3client();
+
+        S3Object s3object = s3client.getObject(bucketName, imagePath);
+
+        //S3ObjectInputStream inputStream = s3object.getObjectContent();
+        //FileUtils.copyInputStreamToFile(inputStream, new File("/Users/user/Desktop/hello.txt"));
+
+        return s3object.getObjectContent().getHttpRequest().getURI().toString();
     }
 
     @Override

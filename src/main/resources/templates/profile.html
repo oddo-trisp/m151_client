@@ -22,7 +22,7 @@
     <header id="navigation" th:include="html_components/navbar"></header>
     <section class="profile-page">
 
-      <img class="profile-img" src="img/friends.png" alt=""></img>
+      <img class="profile-img" th:src="${image}" alt=""/>
       <p class="name" th:text="${user_name}"></p>
       <a href="#" class="btn btn-primary">Follow</a>
       <nav>
