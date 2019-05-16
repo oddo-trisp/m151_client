@@ -55,6 +55,8 @@ public class RestClientService implements UserDetailsService {
     private final String FIND_POST_BY_ID = "findPostById";
     private final String ADD_NEW_POST = "addNewPost";
     private final String ADD_COMMENT_REACTION = "addCommentReaction";
+    private final String ADD_LIKE_REACTION = "addLikeReaction";
+    private final String REMOVE_LIKE_REACTION = "removeLikeReaction";
 
 
     public boolean checkIfAppUserExists(String email){
@@ -192,5 +194,32 @@ public class RestClientService implements UserDetailsService {
                 .toUri();                                                // Convert to URI
 
         return restTemplate.postForObject(targetUrl, userPostReaction, Post.class);
+    }
+
+    public Post addLikeReaction(String email, Long postId){
+
+        URI targetUrl= UriComponentsBuilder.fromUriString(REST_SERVER)  // Build the base link
+                .path(ADD_LIKE_REACTION)                                     // Add path
+                .queryParam("email", email)                      // Add one or more query params
+                .queryParam("postId", postId)                      // Add one or more query params
+                .build()                                                 // Build the URL
+                .encode()                                                // Encode any URI items that need to be encoded
+                .toUri();                                                // Convert to URI
+
+        return restTemplate.postForObject(targetUrl, null, Post.class);
+    }
+
+    public Post removeLikeReaction(String email, Long postId, Long likeId){
+
+        URI targetUrl= UriComponentsBuilder.fromUriString(REST_SERVER)  // Build the base link
+                .path(REMOVE_LIKE_REACTION)                                     // Add path
+                .queryParam("email", email)                      // Add one or more query params
+                .queryParam("postId", postId)                      // Add one or more query params
+                .queryParam("likeId", likeId)                      // Add one or more query params
+                .build()                                                 // Build the URL
+                .encode()                                                // Encode any URI items that need to be encoded
+                .toUri();                                                // Convert to URI
+
+        return restTemplate.postForObject(targetUrl, null, Post.class);
     }
 }

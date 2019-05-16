@@ -30,8 +30,9 @@
         <p th:text="${currentPost.postText}"></p>
       </article>
       <div class="post-buttons">
-        <div class="action like-action"><i class="far fa-heart"></i></div>
+        <a  class="action like-action" th:href="@{${likeReaction ne null} ? '/removeLikeReaction/'+${currentPost.id}+'/'+${likeReaction.id} : '/addLikeReaction/'+${currentPost.id}}" ><i th:class="${likeReaction ne null} ? 'fas fa-heart' : 'far fa-heart'"></i></a>
         <div class="action comment-action"><i class="fa fa-comment comment-icon"></i></div>
+        <div th:text="${likeReaction ne null} ? 'action like-action fas' : 'action like-action far'"></div>
       </div>
 
       <div class="form-popup" id="comment-form" style="display: none;">
@@ -90,7 +91,7 @@
   </script>
   <!-- Like/Unlike action -->
   <script>
-    $(document).ready(function() {
+    /*$(document).ready(function() {
       $(".like-action i").click(function() {
         if ($(this).hasClass("far")) {
           $(this).removeClass("far").addClass("fas");
@@ -98,7 +99,7 @@
           $(this).removeClass("fas").addClass("far");
         }
       });
-    });
+    });*/
   </script>
 
   <script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js}"></script>

@@ -76,4 +76,11 @@ public class Post {
     public void setUserReactions(List<UserPostReaction> userReactions) {
         this.userReactions = userReactions;
     }
+
+    public UserPostReaction likedByUser(String email){
+        return userReactions.stream()
+                .filter(r -> "LIKE".equals(r.getReactionType()))
+                .filter(r -> email.equals(r.getUserEmail())).findFirst().orElse(null);
+
+    }
 }

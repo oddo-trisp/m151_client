@@ -43,6 +43,7 @@ public class AppUserController {
     private static final String PROFILE = "profile";
     private static final String POST = "post";
     private static final String CURRENT_POST = "currentPost";
+    private static final String LIKE_REACTION = "likeReaction";
     private static final String POSTS = "posts";
     private static final String COMMENT_REACTION = "commentReaction";
     private static final String COMMENTS = "comments";
@@ -136,7 +137,8 @@ public class AppUserController {
         model.addAttribute(USER_NAME, user.getFullName());
         model.addAttribute(POSTS,user.getPosts());
 
-        model.addAttribute(IMAGE,user.getUserImage());
+        String imageStreamFile = user.getUserImage() != null ? restClientService.downloadImageFromS3(user.getUserImage()) : "";
+        model.addAttribute(IMAGE,imageStreamFile);
 
         Map<Long, Post> userPostsMap = user.getPosts().stream().collect(Collectors.toMap(Post::getId, p -> p));
         session.setAttribute("userPostsMap", userPostsMap);
@@ -147,6 +149,8 @@ public class AppUserController {
     @RequestMapping(value = {"/post/{id}" }, method = RequestMethod.GET)
     public String postPage(@PathVariable Long id, RedirectAttributes ra, HttpSession session) {
         Map<Long, Post> userPostsMap = (Map<Long, Post>) session.getAttribute("userPostsMap");
+        AppUser currentUser = (AppUser) session.getAttribute("currentAppUser");
+
         if(userPostsMap == null) userPostsMap = new HashMap<>();
         Post post = userPostsMap.getOrDefault(id, null);
         if(post == null){
@@ -155,6 +159,7 @@ public class AppUserController {
         }
         session.setAttribute("userPostsMap", userPostsMap);
         ra.addFlashAttribute(CURRENT_POST, post);
+        ra.addFlashAttribute(LIKE_REACTION, post.likedByUser(currentUser.getEmail()));
         return "redirect:/post";
     }
 
@@ -168,22 +173,39 @@ public class AppUserController {
                 .filter(r -> r.getReactionType().equals("COMMENT"))
                 .collect(Collectors.toList());
         model.addAttribute(COMMENTS , comments);
-        model.addAttribute(IMAGE,post.getPostImage());
+        String imageStreamFile = post.getPostImage() != null ? restClientService.downloadImageFromS3(post.getPostImage()) : "";
+        model.addAttribute(IMAGE,imageStreamFile);
         return POST;
     }
 
     @RequestMapping(value = "/addCommentReaction/{id}", method = RequestMethod.POST)
-    public String addUserPostReaction(@PathVariable Long id, @ModelAttribute UserPostReaction commentReaction, Principal principal, Model model, HttpSession session) {
+    public String addCommentReaction(@PathVariable Long id, @ModelAttribute UserPostReaction commentReaction, Principal principal, HttpSession session) {
         Post persistedPost = restClientService.addCommentReaction(principal.getName(), id, commentReaction);
+        return redirectToPost(id,persistedPost,session);
+    }
+
+    @RequestMapping(value = "/addLikeReaction/{id}", method = RequestMethod.GET)
+    public String addLikeReaction(@PathVariable Long id, Principal principal, HttpSession session) {
+        Post persistedPost = restClientService.addLikeReaction(principal.getName(), id);
+        return redirectToPost(id, persistedPost, session);
+    }
+
+    @RequestMapping(value = "/removeLikeReaction/{id}/{likeId}", method = RequestMethod.GET)
+    public String removeLikeReaction(@PathVariable Long id, @PathVariable Long likeId, Principal principal, HttpSession session) {
+        Post persistedPost = restClientService.removeLikeReaction(principal.getName(), id, likeId);
+        return redirectToPost(id, persistedPost, session);
+    }
+
+    private String redirectToPost(Long id, Post persistedPost, HttpSession session){
         if(persistedPost != null){
 
             Map<Long, Post> userPostsMap = (Map<Long, Post>) session.getAttribute("userPostsMap");
             userPostsMap.put(persistedPost.getId(), persistedPost);
             session.setAttribute("userPostsMap", userPostsMap);
 
-            return "redirect:/profile";
+            return "redirect:/post/"+id;
         }
-        else return POST;
+        return "redirect:/post/"+id;
     }
 }
 
