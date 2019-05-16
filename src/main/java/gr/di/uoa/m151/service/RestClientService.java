@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -85,20 +86,24 @@ public class RestClientService implements UserDetailsService {
                 .build();
     }
 
-    public void uploadImageOnS3(String email, MultipartFile file, int p){
+    public String uploadImageOnS3(String email, MultipartFile file, int p){
 
         AmazonS3 s3client = buildS3client();
         try {
+
             InputStream is = file.getInputStream();
             // The filename has the format userId_fn (eg. 18_me.png) which means user with id = 18 has profile image named
             // me.png. Adding the userId makes sure that there will never be an image with the same name.
             String fileName = generateFileNameForS3(email, file, p);
             s3client.putObject(new PutObjectRequest(bucketName,fileName,is,new ObjectMetadata())
                     .withCannedAcl(CannedAccessControlList.PublicRead));
+            return downloadImageFromS3(s3client, fileName);
+
         } catch (IOException ioe) {
             System.out.println("IOException when writing on S3");
         }
 
+        return null;
     }
 
     public String generateFileNameForS3(String email, MultipartFile file, int p){
@@ -112,15 +117,11 @@ public class RestClientService implements UserDetailsService {
         return fileName;
     }
 
-    public String downloadImageFromS3(String imagePath){
-
-        AmazonS3 s3client = buildS3client();
+    private String downloadImageFromS3(AmazonS3 s3client, String imagePath){
 
         S3Object s3object = s3client.getObject(bucketName, imagePath);
-
         //S3ObjectInputStream inputStream = s3object.getObjectContent();
         //FileUtils.copyInputStreamToFile(inputStream, new File("/Users/user/Desktop/hello.txt"));
-
         return s3object.getObjectContent().getHttpRequest().getURI().toString();
     }
 
