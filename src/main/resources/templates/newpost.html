@@ -43,6 +43,16 @@
     </section>
   </div>
 
+  <!-- alert big image size -->
+  <script>
+    var uploadField = document.getElementById("post-image");
+    uploadField.onchange = function() {
+      if(this.files[0].size > 1048576){
+        alert("File is too big! Consider posting an image less than 1MB big!");
+      }
+    };
+  </script>
+
   <script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js}"></script>
   <script th:src="@{https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js}"></script>
 </body>

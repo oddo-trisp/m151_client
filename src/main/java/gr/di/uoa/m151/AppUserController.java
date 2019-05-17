@@ -72,9 +72,11 @@ public class AppUserController {
     public String registrationPage(@ModelAttribute AppUser newAppUser, @RequestParam("file") MultipartFile file) {
         boolean userExists = restClientService.checkIfAppUserExists(newAppUser.getEmail());
         if(!userExists) {
-            String imagePathOnS3 = restClientService.uploadImageOnS3(newAppUser.getEmail(), file, 0);
-            // upload the image on S3. Number 0 means it's a profile image for user newAppUser.
-            newAppUser.setUserImage(imagePathOnS3); // save the path to the DB
+            if(file != null){
+                String imagePathOnS3 = restClientService.uploadImageOnS3(newAppUser.getEmail(), file, 0);
+                // upload the image on S3. Number 0 means it's a profile image for user newAppUser.
+                newAppUser.setUserImage(imagePathOnS3); // save the path to the DB
+            }
             AppUser persistedUser = restClientService.signUp(newAppUser);
             if(persistedUser != null){
                 return SIGN_IN;
@@ -99,9 +101,12 @@ public class AppUserController {
         if(appUser == null)
             appUser =restClientService.getUserData(principal.getName());
 
-        String imagePathOnS3 =  restClientService.uploadImageOnS3(appUser.getEmail(), file, 1);
-        // upload the image on S3. Number 1 means it's a post image for principal user in the current session.
-        newPost.setPostImage(imagePathOnS3);
+        if(file != null)
+        {
+            String imagePathOnS3 =  restClientService.uploadImageOnS3(appUser.getEmail(), file, 1);
+            // upload the image on S3. Number 1 means it's a post image for principal user in the current session.
+            newPost.setPostImage(imagePathOnS3);
+        }
         appUser = restClientService.addNewPost(principal.getName(), newPost);
 
         if(appUser != null){
