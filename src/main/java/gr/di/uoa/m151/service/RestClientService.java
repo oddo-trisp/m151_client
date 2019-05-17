@@ -12,6 +12,8 @@ import gr.di.uoa.m151.entity.Post;
 import gr.di.uoa.m151.entity.UserPostReaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -52,11 +54,13 @@ public class RestClientService implements UserDetailsService {
     private final String REST_SERVER = "http://localhost:8580/";
     private final String SIGN_UP = "signup";
     private final String FIND_APPUSER_BY_EMAIL = "findAppUserByEmail";
+    private final String FIND_LATEST_APP_USERS = "findLatestAppUsers";
     private final String FIND_POST_BY_ID = "findPostById";
     private final String ADD_NEW_POST = "addNewPost";
     private final String ADD_COMMENT_REACTION = "addCommentReaction";
     private final String ADD_LIKE_REACTION = "addLikeReaction";
     private final String REMOVE_LIKE_REACTION = "removeLikeReaction";
+    private final String FOLLOW_USER = "followUser";
 
 
     public boolean checkIfAppUserExists(String email){
@@ -221,5 +225,23 @@ public class RestClientService implements UserDetailsService {
                 .toUri();                                                // Convert to URI
 
         return restTemplate.postForObject(targetUrl, null, Post.class);
+    }
+
+    public List<AppUser> loadSuggestions(){
+        return restTemplate.exchange(REST_SERVER+FIND_LATEST_APP_USERS, HttpMethod.GET, null, new ParameterizedTypeReference<List<AppUser>>(){}).getBody();
+    }
+
+    public AppUser followUser(String email, Long userId){
+
+        URI targetUrl= UriComponentsBuilder.fromUriString(REST_SERVER)  // Build the base link
+                .path(FOLLOW_USER)                                     // Add path
+                .queryParam("email", email)                      // Add one or more query params
+                .queryParam("userId", userId)                      // Add one or more query params
+                .build()                                                 // Build the URL
+                .encode()                                                // Encode any URI items that need to be encoded
+                .toUri();
+
+        return restTemplate.postForObject(targetUrl, null, AppUser.class);
+
     }
 }

@@ -2,7 +2,9 @@ package gr.di.uoa.m151.entity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class AppUser implements Serializable {
 
@@ -21,6 +23,12 @@ public class AppUser implements Serializable {
     private boolean enabled = true;
 
     private List<Post> posts = new ArrayList<>();
+
+    private Set<AppUser> followings = new HashSet<>();
+
+    private Set<AppUser> followers = new HashSet<>();
+
+
 
     public Long getId() {
         return id;
@@ -80,5 +88,21 @@ public class AppUser implements Serializable {
 
     public void setEncryptedPassword(String encryptedPassword) {
         this.encryptedPassword = encryptedPassword;
+    }
+
+    public Set<AppUser> getFollowings() {
+        return followings;
+    }
+
+    public void setFollowings(Set<AppUser> followings) {
+        this.followings = followings;
+    }
+
+    public Set<AppUser> getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(Set<AppUser> followers) {
+        this.followers = followers;
     }
 }

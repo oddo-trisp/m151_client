@@ -13,6 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +43,7 @@ public class AppUserController {
 
     private static final String NEW_APP_USER = "newAppUser";
     private static final String NEW_POST = "newPost";
+    private static final String SUGGESTIONS = "suggestions";
 
     @Autowired
     public AppUserController(RestClientService restClientService) {
@@ -50,6 +52,23 @@ public class AppUserController {
 
     @RequestMapping(value = { "/", "/index" }, method = RequestMethod.GET)
     public String indexPage(Model model) {
+        List<AppUser> suggestions = restClientService.loadSuggestions();
+        Map<Integer, List<AppUser>> suggestionsMap = new HashMap<>();
+        for(int i=0; i<3; i++)
+            suggestionsMap.put(i, new ArrayList<>());
+
+        int y=-1;
+        for(int i=0; i<suggestions.size(); i++){
+            if(i % 4 == 0)
+                y++;
+            if(y==3)
+                break;
+            List<AppUser> list = suggestionsMap.get(y);
+            list.add(suggestions.get(i));
+            suggestionsMap.put(y, list);
+        }
+
+        model.addAttribute(SUGGESTIONS, suggestionsMap);
         //model.addAttribute(TITLE, "Home");
         return INDEX;
     }
@@ -200,5 +219,12 @@ public class AppUserController {
         }
         return "redirect:/post/"+id;
     }
+
+    @RequestMapping(value = {"/followUser/{id}" }, method = RequestMethod.GET)
+    public String followUser(@PathVariable Long id, Principal principal){
+        AppUser persistedUser = restClientService.followUser(principal.getName(), id);
+        return "redirect:/index";
+    }
+
 }
 
