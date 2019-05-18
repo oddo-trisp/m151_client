@@ -56,6 +56,7 @@ public class RestClientService implements UserDetailsService {
     private final String FIND_APPUSER_BY_EMAIL = "findAppUserByEmail";
     private final String FIND_APPUSER_BY_ID = "findAppUserById";
     private final String FIND_SUGGESTIONS = "findSuggestions";
+    private final String FIND_SUGGESTIONS_WITH_POSTS = "findSuggestionsWithPosts";
     private final String FIND_RECENT_POSTS = "findRecentPosts";
     private final String FIND_POST_BY_ID = "findPostById";
     private final String ADD_NEW_POST = "addNewPost";
@@ -243,6 +244,19 @@ public class RestClientService implements UserDetailsService {
     public List<AppUser> loadSuggestions(String email){
         URI targetUrl= UriComponentsBuilder.fromUriString(REST_SERVER)  // Build the base link
                 .path(FIND_SUGGESTIONS)                                     // Add path
+                .queryParam("email", email)                      // Add one or more query params
+                .build()                                                 // Build the URL
+                .encode()                                                // Encode any URI items that need to be encoded
+                .toUri();
+
+        return restTemplate.exchange(targetUrl, HttpMethod.GET, null,
+                new ParameterizedTypeReference<List<AppUser>>(){})
+                .getBody();
+    }
+
+    public List<AppUser> loadSuggestionsWithPosts(String email){
+        URI targetUrl= UriComponentsBuilder.fromUriString(REST_SERVER)  // Build the base link
+                .path(FIND_SUGGESTIONS_WITH_POSTS)                                     // Add path
                 .queryParam("email", email)                      // Add one or more query params
                 .build()                                                 // Build the URL
                 .encode()                                                // Encode any URI items that need to be encoded

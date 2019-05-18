@@ -34,8 +34,12 @@
             <p th:text="${post.postText}"></p>
           </div>
           <div class="post-buttons">
-            <div class="action like-action"><i class="far fa-heart"></i></div>
-            <div class="action"><a th:href="@{/post}" title="Open post's page"><i class="far fa-share-square"></i></a></div>
+            <div class="action like-action">
+              <a  class="action like-action" th:href="@{${post.likedByCurrentUser ne null ? '/removeLikeReaction/'+post.id+'/'+post.likedByCurrentUser.id+'/index' : '/addLikeReaction/'+post.id+'/index'}}" >
+                <i th:class="${post.likedByCurrentUser ne null ? 'fas fa-heart' : 'far fa-heart'}"></i>
+              </a>
+            </div>
+            <div class="action"><a th:href="@{'/post/'+${post.id}}" title="Open post's page"><i class="far fa-share-square"></i></a></div>
           </div>
         </article>
       </div>

@@ -22,6 +22,8 @@ public class Post {
 
     private List<UserPostReaction> userReactions = new ArrayList<>();
 
+    private UserPostReaction likedByCurrentUser;
+
 
     public Long getId() {
         return id;
@@ -87,12 +89,21 @@ public class Post {
         this.userReactions = userReactions;
     }
 
+    public UserPostReaction getLikedByCurrentUser() {
+        return likedByCurrentUser;
+    }
+
+    public void setLikedByCurrentUser(UserPostReaction likedByCurrentUser) {
+        this.likedByCurrentUser = likedByCurrentUser;
+    }
+
     public UserPostReaction likedByUser(String email){
-        return userReactions.stream()
+        likedByCurrentUser = userReactions.stream()
                 .filter(r -> r.getReactionType() != null)
                 .filter(r -> "LIKE".equals(r.getReactionType()))
                 .filter(r -> email.equals(r.getAppUserShort().getEmail()))
                 .findFirst().orElse(null);
+        return likedByCurrentUser;
 
     }
 }

@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
-@SessionAttributes({ "currentAppUser", "currentPost", "userPostsMap"})
+@SessionAttributes({ "currentAppUser", "userPostsMap"})
 public class AppUserController {
 
     private final RestClientService restClientService;
@@ -61,6 +61,7 @@ public class AppUserController {
     public String indexPage(Model model, Principal principal) {
         List<AppUser> suggestions = restClientService.loadSuggestions(principal.getName());
         List<Post> recentPosts = restClientService.loadRecentPosts(principal.getName());
+        recentPosts.forEach(p -> p.likedByUser(principal.getName()));
         model.addAttribute(SUGGESTIONS, suggestions);
         model.addAttribute(RECENT_POSTS, recentPosts);
         return INDEX;
@@ -131,7 +132,9 @@ public class AppUserController {
     }
 
     @RequestMapping(value = { "/people" }, method = RequestMethod.GET)
-    public String peoplePage(Model model) {
+    public String peoplePage(Model model, Principal principal) {
+        List<AppUser> suggestions = restClientService.loadSuggestionsWithPosts(principal.getName());
+        model.addAttribute(SUGGESTIONS, suggestions);
         return PEOPLE;
     }
 
@@ -177,19 +180,32 @@ public class AppUserController {
     }
 
     @RequestMapping(value = {"/post/{id}" }, method = RequestMethod.GET)
-    public String postPage(@PathVariable Long id, RedirectAttributes ra, HttpSession session) {
+    public String postPage(@PathVariable Long id, RedirectAttributes ra, HttpSession session, Principal principal) {
         Map<Long, Post> userPostsMap = (Map<Long, Post>) session.getAttribute("userPostsMap");
         AppUser currentUser = (AppUser) session.getAttribute("currentAppUser");
-
-        if(userPostsMap == null) userPostsMap = new HashMap<>();
-        Post post = userPostsMap.getOrDefault(id, null);
-        if(post == null){
-            post = restClientService.getPostData(id);
-            userPostsMap.put(id, post);
+        if(currentUser == null){
+            currentUser =restClientService.getUserData(principal.getName());
+            session.removeAttribute("currentAppUser");
+            session.setAttribute("currentAppUser", currentUser);
         }
-        session.setAttribute("userPostsMap", userPostsMap);
+
+        Post post;
+        //That a post from currentUser
+        if(principal.getName().equals(currentUser.getEmail())){
+            if(userPostsMap == null) userPostsMap = new HashMap<>();
+            post = userPostsMap.getOrDefault(id, null);
+            if(post == null){
+                post = restClientService.getPostData(id);
+                userPostsMap.put(id, post);
+            }
+            session.setAttribute("userPostsMap", userPostsMap);
+        }
+        else
+            post = restClientService.getPostData(id);
+
+        post.likedByUser(currentUser.getEmail());
         ra.addFlashAttribute(CURRENT_POST, post);
-        ra.addFlashAttribute(LIKE_REACTION, post.likedByUser(currentUser.getEmail()));
+        //ra.addFlashAttribute(LIKE_REACTION, post.likedByUser(currentUser.getEmail()));
         return "redirect:/post";
     }
 
@@ -217,6 +233,18 @@ public class AppUserController {
     public String addLikeReaction(@PathVariable Long id, Principal principal, HttpSession session) {
         Post persistedPost = restClientService.addLikeReaction(principal.getName(), id);
         return redirectToPost(id, persistedPost, session);
+    }
+
+    @RequestMapping(value = "/removeLikeReaction/{id}/{likeId}/index", method = RequestMethod.GET)
+    public String removeLikeReactionFromIndex(@PathVariable Long id, @PathVariable Long likeId, Principal principal) {
+        restClientService.removeLikeReaction(principal.getName(), id, likeId);
+        return "redirect:/index";
+    }
+
+    @RequestMapping(value = "/addLikeReaction/{id}/index", method = RequestMethod.GET)
+    public String addLikeReactionFromIndex(@PathVariable Long id, Principal principal) {
+        restClientService.addLikeReaction(principal.getName(), id);
+        return "redirect:/index";
     }
 
     @RequestMapping(value = "/removeLikeReaction/{id}/{likeId}", method = RequestMethod.GET)

@@ -22,44 +22,16 @@
   <div class="container-fluid">
     <header id="navigation" th:include="html_components/navbar"></header>
     <p class="title-header">Suggested People</p>
-    <section class="suggested-people row">
+    <section class="suggested-people row" th:each="suggestion:${suggestions}">
       <div class="col-12 newcard">
         <div class="card person">
           <div class="card-header person-header">
-            <a th:href="@{/profile}"><img class="person-img" th:src="@{img/friends.png}" alt=""/></a>
-            <span class="person-name">Name Surname</span>
+            <a th:href="@{/profile}"><img class="person-img" th:src="${suggestion.userImage != null ? suggestion.userImage : 'img/friends.png'}" alt=""/></a>
+            <span class="person-name" th:text="${suggestion.fullName}"></span>
           </div>
           <div class="card-body person-body row">
-            <div class="col-lg-4 col-md-6 col-xs-12">
-              <img class="post-img" src="http://placehold.it/80x80" />
-            </div>
-            <div class="col-lg-4 col-md-6 col-xs-12">
-              <img class="post-img" src="http://placehold.it/80x80" />
-            </div>
-            <div class="col-lg-4 col-md-6 col-xs-12">
-              <img class="post-img" src="http://placehold.it/80x80" />
-            </div>
-            <div class="col-12 view-profile-button">
-              <a th:href="@{/profile}" class="btn btn-primary">View Profile</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-12 newcard">
-        <div class="card person">
-          <div class="card-header person-header">
-            <a th:href="@{/profile}"><img class="person-img" th:src="@{img/friends.png}" alt=""/></a>
-            <span class="person-name">Name Surname</span>
-          </div>
-          <div class="card-body person-body row">
-            <div class="col-lg-4 col-md-6 col-xs-12">
-              <img class="post-img" src="http://placehold.it/80x80" />
-            </div>
-            <div class="col-lg-4 col-md-6 col-xs-12">
-              <img class="post-img" src="http://placehold.it/80x80" />
-            </div>
-            <div class="col-lg-4 col-md-6 col-xs-12">
-              <img class="post-img" src="http://placehold.it/80x80" />
+            <div class="col-lg-4 col-md-6 col-xs-12" th:each="post:${suggestion.posts}">
+              <img class="post-img" th:src="${post.postImage != null ? post.postImage : 'http://placehold.it/80x80'}" />
             </div>
             <div class="col-12 view-profile-button">
               <a th:href="@{/profile}" class="btn btn-primary">View Profile</a>
