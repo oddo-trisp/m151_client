@@ -1,11 +1,11 @@
 <div class="sticky-top sticky-offset" xmlns:th="http://www.thymeleaf.org">
     <div class="suggestions">
-        <h5>suggested people</h5>
+        <h5>people you may know</h5>
 
         <div class="row">
             <div class="col-3 suggestion" th:each="suggestion:${suggestions}">
                 <a href=""><img class="profile-img" th:src="${suggestion.userImage != null ? suggestion.userImage : 'img/friends.png'}" alt=""></a>
-                <div th:text="${suggestion.fullName}"></div>
+<!--                <div th:text="${suggestion.fullName}"></div>-->
                 <a class="follow-btn" th:href="@{'/followUser/'+${suggestion.id}}">Follow</a>
             </div>
         </div>

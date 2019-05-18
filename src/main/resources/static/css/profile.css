@@ -27,10 +27,6 @@
   margin-top: 1em;
 }
 
-.followers p, .following p{
-  margin-top: .75em;
-}
-
 @media (max-width: 576px){
   .name{
     font-size: 1.2rem;
@@ -47,3 +43,34 @@
 .btn-primary:hover{
   background-color: #555070 !important;
 }
+
+/* post tab */
+
+.post img{
+  width: 180px;
+  height: 180px;
+}
+
+.post p{
+  margin-top: 1rem;
+  font-size: .8rem;
+}
+
+/* followers and following tabs */
+
+.followersShort img{
+  width: 85px;
+  height: 85px;
+  border-radius: 50%;
+}
+
+.followersShort p{
+  margin-top: 1rem;
+  font-size: .8rem;
+}
+
+.followersShort .btn-primary{
+  font-size: .7rem;
+  margin-top: 0;
+}
+

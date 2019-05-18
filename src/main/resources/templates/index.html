@@ -6,7 +6,6 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" th:href="@{https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css}">
-  <link rel="stylesheet" type="text/css" href="https://unpkg.com/file-upload-with-preview@3.4.3/dist/file-upload-with-preview.min.css">
   <link rel="stylesheet" th:href="@{/css/styles.css}">
   <link rel="stylesheet" th:href="@{/css/navbar.css}">
   <link rel="stylesheet" th:href="@{/css/sidebar.css}">
@@ -15,7 +14,7 @@
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
   <!-- JQUERY -->
-  <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+  <script th:src="@{https://code.jquery.com/jquery-3.3.1.js}" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -23,8 +22,8 @@
   <div class="container-fluid">
     <header id="navigation" th:include="html_components/navbar"></header>
     <section class="main-body row">
-      <div class="col-lg-7 col-md-12" id="post-feed" th:each="post:${recentPosts}">
-        <article class="post">
+      <div class="col-lg-7 col-md-12" id="post-feed" th:if="${not #lists.isEmpty(recentPosts)}">
+        <article class="post" th:each="post:${recentPosts}">
           <h4 th:text="${post.postTitle}"></h4>
           <p>by <a th:href="@{/profile}" class="author-name" th:text="${post.appUserShort.fullName}"></a> </p>
           <div class="image">
@@ -42,6 +41,10 @@
             <div class="action"><a th:href="@{'/post/'+${post.id}}" title="Open post's page"><i class="far fa-share-square"></i></a></div>
           </div>
         </article>
+      </div>
+      <div class="col-lg-7 col-md-12" th:if="${#lists.isEmpty(recentPosts)}">
+        <h4 style="text-align: center; margin-top: 1rem; color: #c25b5b;">Oops! Looks like you don't follow anyone.</h4>
+        <h5 style="text-align: center;">Start following people to see your post feed grow!</h5>
       </div>
       <div th:include="html_components/sidebar" class="col-md-5 d-lg-block d-none" id="sidebar"></div>
     </section>
@@ -64,6 +67,7 @@
     });
     rescroll();
   </script>
+
   <!-- Like/Unlike action -->
   <script>
     $(document).ready(function() {
