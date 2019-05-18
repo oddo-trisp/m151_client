@@ -54,7 +54,7 @@ public class RestClientService implements UserDetailsService {
     private final String REST_SERVER = "http://localhost:8580/";
     private final String SIGN_UP = "signup";
     private final String FIND_APPUSER_BY_EMAIL = "findAppUserByEmail";
-    private final String FIND_LATEST_APP_USERS = "findLatestAppUsers";
+    private final String FIND_SUGGESTIONS = "findSuggestions";
     private final String FIND_POST_BY_ID = "findPostById";
     private final String ADD_NEW_POST = "addNewPost";
     private final String ADD_COMMENT_REACTION = "addCommentReaction";
@@ -227,8 +227,17 @@ public class RestClientService implements UserDetailsService {
         return restTemplate.postForObject(targetUrl, null, Post.class);
     }
 
-    public List<AppUser> loadSuggestions(){
-        return restTemplate.exchange(REST_SERVER+FIND_LATEST_APP_USERS, HttpMethod.GET, null, new ParameterizedTypeReference<List<AppUser>>(){}).getBody();
+    public List<AppUser> loadSuggestions(String email){
+        URI targetUrl= UriComponentsBuilder.fromUriString(REST_SERVER)  // Build the base link
+                .path(FIND_SUGGESTIONS)                                     // Add path
+                .queryParam("email", email)                      // Add one or more query params
+                .build()                                                 // Build the URL
+                .encode()                                                // Encode any URI items that need to be encoded
+                .toUri();
+
+        return restTemplate.exchange(targetUrl, HttpMethod.GET, null,
+                new ParameterizedTypeReference<List<AppUser>>(){})
+                .getBody();
     }
 
     public AppUser followUser(String email, Long userId){

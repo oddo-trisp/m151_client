@@ -24,9 +24,9 @@ public class AppUser implements Serializable {
 
     private List<Post> posts = new ArrayList<>();
 
-    private Set<AppUser> followings = new HashSet<>();
+    private Set<AppUser> followingsShort = new HashSet<>();
 
-    private Set<AppUser> followers = new HashSet<>();
+    private Set<AppUser> followersShort = new HashSet<>();
 
 
 
@@ -90,19 +90,19 @@ public class AppUser implements Serializable {
         this.encryptedPassword = encryptedPassword;
     }
 
-    public Set<AppUser> getFollowings() {
-        return followings;
+    public Set<AppUser> getFollowingsShort() {
+        return followingsShort;
     }
 
-    public void setFollowings(Set<AppUser> followings) {
-        this.followings = followings;
+    public void setFollowingsShort(Set<AppUser> followingsShort) {
+        this.followingsShort = followingsShort;
     }
 
-    public Set<AppUser> getFollowers() {
-        return followers;
+    public Set<AppUser> getFollowersShort() {
+        return followersShort;
     }
 
-    public void setFollowers(Set<AppUser> followers) {
-        this.followers = followers;
+    public void setFollowersShort(Set<AppUser> followersShort) {
+        this.followersShort = followersShort;
     }
 }

@@ -2,16 +2,12 @@
     <div class="suggestions">
         <h5>suggested people</h5>
 
-
-        <div class="row" th:each="key:${suggestions.keySet()}">
-            <div class="col-3 suggestion" th:each="suggestion:${suggestions.get(key)}">
-                <a href=""><img src="img/friends.png" alt=""></a>
+        <div class="row">
+            <div class="col-3 suggestion" th:each="suggestion:${suggestions}">
+                <a href=""><img class="profile-img" th:src="${suggestion.userImage != null ? suggestion.userImage : 'img/friends.png'}" alt=""></a>
                 <div th:text="${suggestion.fullName}"></div>
                 <a class="follow-btn" th:href="@{'/followUser/'+${suggestion.id}}">Follow</a>
             </div>
         </div>
-        <!--<div class="text-right">
-            <button type="submit" class="btn btn-primary">View All</button>
-        </div>-->
     </div>
 </div>

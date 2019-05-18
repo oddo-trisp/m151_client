@@ -24,11 +24,11 @@
 
       <img class="profile-img" alt="" th:src="${image != null} ? image: 'img/friends.png'"/>
       <p class="name" th:text="${user_name}"></p>
-      <a href="#" class="btn btn-primary">Follow</a>
+      <a href="#" th:if="${! myProfile}" class="btn btn-primary">Follow</a>
       <nav>
         <div class="nav nav-tabs justify-content-center" id="nav-tab" role="tablist">
           <a class="nav-item nav-link active" id="nav-posts-tab" data-toggle="tab" th:href="@{#nav-posts}" role="tab" aria-controls="nav-posts" aria-selected="true">Posts</a>
-          <a class="nav-item nav-link" id="nav-followers-tab" data-toggle="tab" th:href="@{#nav-followers}" role="tab" aria-controls="nav-followers" aria-selected="false">Followers</a>
+          <a class="nav-item nav-link" id="nav-followersShort-tab" data-toggle="tab" th:href="@{#nav-followersShort}" role="tab" aria-controls="nav-followersShort" aria-selected="false">Followers</a>
           <a class="nav-item nav-link" id="nav-following-tab" data-toggle="tab" th:href="@{#nav-following}" role="tab" aria-controls="nav-following" aria-selected="false">Following</a>
         </div>
       </nav>
@@ -41,20 +41,22 @@
             </div>
           </div>
         </div>
-        <div class="tab-pane fade" id="nav-followers" role="tabpanel" aria-labelledby="nav-followers-tab">
-          <div class="followers row">
-            <div class="col-md-3 col-sm-12"><a th:href="@{/profile}"><img src="img/friends.png" alt=""></a><p>Name Surname</p></div>
-            <div class="col-md-3 col-sm-12"><a th:href="@{/profile}"><img src="img/friends.png" alt=""></a><p>Name Surname</p></div>
-            <div class="col-md-3 col-sm-12"><a th:href="@{/profile}"><img src="img/friends.png" alt=""></a><p>Name Surname</p></div>
-            <div class="col-md-3 col-sm-12"><a th:href="@{/profile}"><img src="img/friends.png" alt=""></a><p>Name Surname</p></div>
+        <div th:if="${myProfile}" class="tab-pane fade" id="nav-followersShort" role="tabpanel" aria-labelledby="nav-followersShort-tab">
+          <div class="followersShort row">
+            <div class="row" th:text="${followers.size() > 0 ? followers.size()+' persons are following you!' : 'No one is following you...'}"></div>
+            <div class="col-md-3 col-sm-12" th:each="follower:${followers}">
+              <a th:href="@{/profile}">
+                <img alt="" class="profile-img" th:src="${follower.userImage != null ? follower.userImage : 'img/friends.png'}"></a><p th:text="${follower.fullName}"></p>
+            </div>
           </div>
         </div>
-        <div class="tab-pane fade" id="nav-following" role="tabpanel" aria-labelledby="nav-followers-tab">
-          <div class="followers row">
-            <div class="col-md-3 col-sm-12"><a th:href="@{/profile}"><img src="img/friends.png" alt=""></a><p>Name Surname</p></div>
-            <div class="col-md-3 col-sm-12"><a th:href="@{/profile}"><img src="img/friends.png" alt=""></a><p>Name Surname</p></div>
-            <div class="col-md-3 col-sm-12"><a th:href="@{/profile}"><img src="img/friends.png" alt=""></a><p>Name Surname</p></div>
-            <div class="col-md-3 col-sm-12"><a th:href="@{/profile}"><img src="img/friends.png" alt=""></a><p>Name Surname</p></div>
+        <div th:if="${myProfile}" class="tab-pane fade" id="nav-following" role="tabpanel" aria-labelledby="nav-followersShort-tab">
+          <div class="followersShort row">
+            <div class="row" th:text="${followings.size() > 0 ? 'You follow '+followings.size()+' person!' : 'You do not follow anyone...'}"></div>
+            <div class="followersShort row">
+              <div class="col-md-3 col-sm-12" th:each="following:${followings}"><a th:href="@{/profile}">
+                <img alt="" class="profile-img" th:src="${following.userImage != null ? following.userImage : 'img/friends.png'}"></a><p th:text="${following.fullName}"></p></div>
+            </div>
           </div>
         </div>
       </div>

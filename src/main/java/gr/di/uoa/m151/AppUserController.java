@@ -13,7 +13,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,8 +35,11 @@ public class AppUserController {
     private static final String CURRENT_POST = "currentPost";
     private static final String LIKE_REACTION = "likeReaction";
     private static final String POSTS = "posts";
+    private static final String FOLLOWERS = "followers";
+    private static final String FOLLOWINGS = "followings";
     private static final String COMMENT_REACTION = "commentReaction";
     private static final String COMMENTS = "comments";
+    private static final String MY_PROFILE = "myProfile";
 
     private static final String USER_NAME = "user_name";
 
@@ -51,25 +53,9 @@ public class AppUserController {
     }
 
     @RequestMapping(value = { "/", "/index" }, method = RequestMethod.GET)
-    public String indexPage(Model model) {
-        List<AppUser> suggestions = restClientService.loadSuggestions();
-        Map<Integer, List<AppUser>> suggestionsMap = new HashMap<>();
-        for(int i=0; i<3; i++)
-            suggestionsMap.put(i, new ArrayList<>());
-
-        int y=-1;
-        for(int i=0; i<suggestions.size(); i++){
-            if(i % 4 == 0)
-                y++;
-            if(y==3)
-                break;
-            List<AppUser> list = suggestionsMap.get(y);
-            list.add(suggestions.get(i));
-            suggestionsMap.put(y, list);
-        }
-
-        model.addAttribute(SUGGESTIONS, suggestionsMap);
-        //model.addAttribute(TITLE, "Home");
+    public String indexPage(Model model, Principal principal) {
+        List<AppUser> suggestions = restClientService.loadSuggestions(principal.getName());
+        model.addAttribute(SUGGESTIONS, suggestions);
         return INDEX;
     }
 
@@ -150,6 +136,9 @@ public class AppUserController {
         }
         model.addAttribute(USER_NAME, user.getFullName());
         model.addAttribute(POSTS,user.getPosts());
+        model.addAttribute(FOLLOWERS,user.getFollowersShort());
+        model.addAttribute(FOLLOWINGS,user.getFollowingsShort());
+        model.addAttribute(MY_PROFILE, Boolean.TRUE);
 
         model.addAttribute(IMAGE,user.getUserImage());
 
