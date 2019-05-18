@@ -1,5 +1,6 @@
 package gr.di.uoa.m151;
 
+import com.amazonaws.util.StringUtils;
 import gr.di.uoa.m151.entity.AppUser;
 import gr.di.uoa.m151.entity.Post;
 import gr.di.uoa.m151.entity.UserPostReaction;
@@ -49,6 +50,7 @@ public class AppUserController {
     private static final String NEW_APP_USER = "newAppUser";
     private static final String NEW_POST = "newPost";
     private static final String SUGGESTIONS = "suggestions";
+    private static final String RECENT_POSTS = "recentPosts";
 
     @Autowired
     public AppUserController(RestClientService restClientService) {
@@ -58,7 +60,9 @@ public class AppUserController {
     @RequestMapping(value = { "/", "/index" }, method = RequestMethod.GET)
     public String indexPage(Model model, Principal principal) {
         List<AppUser> suggestions = restClientService.loadSuggestions(principal.getName());
+        List<Post> recentPosts = restClientService.loadRecentPosts(principal.getName());
         model.addAttribute(SUGGESTIONS, suggestions);
+        model.addAttribute(RECENT_POSTS, recentPosts);
         return INDEX;
     }
 
@@ -80,7 +84,7 @@ public class AppUserController {
     public String registrationPage(@ModelAttribute AppUser newAppUser, @RequestParam("file") MultipartFile file) {
         boolean userExists = restClientService.checkIfAppUserExists(newAppUser.getEmail());
         if(!userExists) {
-            if(file != null){
+            if(file != null && !StringUtils.isNullOrEmpty(file.getName())){
                 String imagePathOnS3 = restClientService.uploadImageOnS3(newAppUser.getEmail(), file, 0);
                 // upload the image on S3. Number 0 means it's a profile image for user newAppUser.
                 newAppUser.setUserImage(imagePathOnS3); // save the path to the DB
@@ -109,7 +113,7 @@ public class AppUserController {
         if(appUser == null)
             appUser =restClientService.getUserData(principal.getName());
 
-        if(file != null)
+        if(file != null && !StringUtils.isNullOrEmpty(file.getName()))
         {
             String imagePathOnS3 =  restClientService.uploadImageOnS3(appUser.getEmail(), file, 1);
             // upload the image on S3. Number 1 means it's a post image for principal user in the current session.
@@ -118,8 +122,9 @@ public class AppUserController {
         appUser = restClientService.addNewPost(principal.getName(), newPost);
 
         if(appUser != null){
+            session.removeAttribute("currentAppUser");
             session.setAttribute("currentAppUser", appUser);
-            return INDEX;
+            return "redirect:/index";
         }
         else
             return NEWPOST;
@@ -135,6 +140,7 @@ public class AppUserController {
         AppUser user = (AppUser) session.getAttribute("currentAppUser");
         if(user == null){
             user =restClientService.getUserData(principal.getName());
+            session.removeAttribute("currentAppUser");
             session.setAttribute("currentAppUser", user);
         }
         model.addAttribute(USER_NAME, user.getFullName());

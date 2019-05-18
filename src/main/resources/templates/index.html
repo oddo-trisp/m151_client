@@ -23,29 +23,15 @@
   <div class="container-fluid">
     <header id="navigation" th:include="html_components/navbar"></header>
     <section class="main-body row">
-      <div class="col-lg-7 col-md-12" id="post-feed">
+      <div class="col-lg-7 col-md-12" id="post-feed" th:each="post:${recentPosts}">
         <article class="post">
-          <h4>The world's best cheeseburger</h4>
-          <p>by <a th:href="@{/profile}" class="author-name"> George Apostolopoulos</a> </p>
+          <h4 th:text="${post.postTitle}"></h4>
+          <p>by <a th:href="@{/profile}" class="author-name" th:text="${post.appUserShort.fullName}"></a> </p>
           <div class="image">
-            <img src="img/post/cheeseburger.png" alt="">
+            <img th:src="${post.postImage != null ? post.postImage : 'img/post/groceries.png'}" alt="">
           </div>
           <div class="description">
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatum nesciunt vero ad, iste tempore accusamus, dolorum expedita dicta praesentium, numquam, ex! Ea tenetur velit, consectetur non qui porro quis alias.</p>
-          </div>
-          <div class="post-buttons">
-            <div class="action like-action"><i class="far fa-heart"></i></div>
-            <div class="action"><a th:href="@{/post}" title="Open post's page"><i class="far fa-share-square"></i></a></div>
-          </div>
-        </article>
-        <article class="post">
-          <h4>My Ramen is better than yours!</h4>
-          <p>by <a th:href="@{/profile}" class="author-name"> Odysseas Trispiotis</a> </p>
-          <div class="image">
-            <img src="img/post/ramen.png" alt="">
-          </div>
-          <div class="description">
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatum nesciunt vero ad, iste tempore accusamus, dolorum expedita dicta praesentium, numquam, ex! Ea tenetur velit, consectetur non qui porro quis alias.</p>
+            <p th:text="${post.postText}"></p>
           </div>
           <div class="post-buttons">
             <div class="action like-action"><i class="far fa-heart"></i></div>

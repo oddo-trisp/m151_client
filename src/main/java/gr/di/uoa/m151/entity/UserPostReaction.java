@@ -16,11 +16,7 @@ public class UserPostReaction implements Serializable {
 
     private String reactionType;
 
-    private String userEmail;
-
-    private String userFullName;
-
-    private String userImage;
+    private AppUser appUserShort;
 
 
 
@@ -80,27 +76,11 @@ public class UserPostReaction implements Serializable {
         this.reactionType = reactionType;
     }
 
-    public String getUserEmail() {
-        return userEmail;
+    public AppUser getAppUserShort() {
+        return appUserShort;
     }
 
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
-    }
-
-    public String getUserFullName() {
-        return userFullName;
-    }
-
-    public void setUserFullName(String userFullName) {
-        this.userFullName = userFullName;
-    }
-
-    public String getUserImage() {
-        return userImage;
-    }
-
-    public void setUserImage(String userImage) {
-        this.userImage = userImage;
+    public void setAppUserShort(AppUser appUserShort) {
+        this.appUserShort = appUserShort;
     }
 }

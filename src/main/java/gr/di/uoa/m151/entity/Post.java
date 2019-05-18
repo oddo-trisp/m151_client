@@ -12,11 +12,13 @@ public class Post {
 
     private String postText;
 
-    private String postImage = "";
+    private String postImage;
 
     private Timestamp creationDate;
 
     private AppUser appUser;
+
+    private AppUser appUserShort;
 
     private List<UserPostReaction> userReactions = new ArrayList<>();
 
@@ -69,6 +71,14 @@ public class Post {
         this.appUser = appUser;
     }
 
+    public AppUser getAppUserShort() {
+        return appUserShort;
+    }
+
+    public void setAppUserShort(AppUser appUserShort) {
+        this.appUserShort = appUserShort;
+    }
+
     public List<UserPostReaction> getUserReactions() {
         return userReactions;
     }
@@ -79,8 +89,10 @@ public class Post {
 
     public UserPostReaction likedByUser(String email){
         return userReactions.stream()
+                .filter(r -> r.getReactionType() != null)
                 .filter(r -> "LIKE".equals(r.getReactionType()))
-                .filter(r -> email.equals(r.getUserEmail())).findFirst().orElse(null);
+                .filter(r -> email.equals(r.getAppUserShort().getEmail()))
+                .findFirst().orElse(null);
 
     }
 }
