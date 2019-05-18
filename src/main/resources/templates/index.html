@@ -25,7 +25,8 @@
       <div class="col-lg-7 col-md-12" id="post-feed" th:if="${not #lists.isEmpty(recentPosts)}">
         <article class="post" th:each="post:${recentPosts}">
           <h4 th:text="${post.postTitle}"></h4>
-          <p>by <a th:href="@{/profile}" class="author-name" th:text="${post.appUserShort.fullName}"></a> </p>
+          <p>by <a th:href="@{${ post.appUserShort.email eq #request.userPrincipal.name ? '/profileCurrent' : '/profile/'+post.appUserShort.id}}"
+                   class="author-name" th:text="${post.appUserShort.fullName}"></a> </p>
           <div class="image">
             <img th:src="${post.postImage != null ? post.postImage : 'img/post/groceries.png'}" alt="">
           </div>

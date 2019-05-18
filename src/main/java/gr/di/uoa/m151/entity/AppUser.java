@@ -20,7 +20,7 @@ public class AppUser implements Serializable {
 
     private String userImage;
 
-    private boolean enabled = true;
+    private Boolean enabled = true;
 
     private List<Post> posts = new ArrayList<>();
 

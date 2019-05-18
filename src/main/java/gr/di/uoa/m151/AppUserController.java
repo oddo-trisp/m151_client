@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
-@SessionAttributes({ "currentAppUser", "userPostsMap"})
+//@SessionAttributes({ "currentAppUser", "userPostsMap"})
 public class AppUserController {
 
     private final RestClientService restClientService;
@@ -43,9 +43,10 @@ public class AppUserController {
     private static final String COMMENT_REACTION = "commentReaction";
     private static final String COMMENTS = "comments";
     private static final String MY_PROFILE = "myProfile";
-    private static final String FOLLOWS = "follows";
+    private static final String ENABLE_FOLLOW_BUTTON = "enableFollowButton";
 
     private static final String USER_NAME = "user_name";
+    private static final String USER_ID = "user_id";
 
     private static final String NEW_APP_USER = "newAppUser";
     private static final String NEW_POST = "newPost";
@@ -123,7 +124,6 @@ public class AppUserController {
         appUser = restClientService.addNewPost(principal.getName(), newPost);
 
         if(appUser != null){
-            session.removeAttribute("currentAppUser");
             session.setAttribute("currentAppUser", appUser);
             return "redirect:/index";
         }
@@ -138,44 +138,59 @@ public class AppUserController {
         return PEOPLE;
     }
 
-    @RequestMapping(value = { "/profile" }, method = RequestMethod.GET)
-    public String profilePage(Model model, Principal principal, HttpSession session) {
+    @RequestMapping(value = { "/profileCurrent" }, method = RequestMethod.GET)
+    public String profilePageCurrentUser(Principal principal, HttpSession session, RedirectAttributes ra) {
         AppUser user = (AppUser) session.getAttribute("currentAppUser");
         if(user == null){
             user =restClientService.getUserData(principal.getName());
-            session.removeAttribute("currentAppUser");
             session.setAttribute("currentAppUser", user);
         }
-        model.addAttribute(USER_NAME, user.getFullName());
-        model.addAttribute(POSTS,user.getPosts());
+        ra.addFlashAttribute(USER_NAME, user.getFullName());
+        ra.addFlashAttribute(USER_ID, user.getId());
+        ra.addFlashAttribute(POSTS,user.getPosts());
 
-        model.addAttribute(FOLLOWERS,user.getFollowersShort());
-        model.addAttribute(FOLLOWINGS,user.getFollowingsShort());
+        ra.addFlashAttribute(FOLLOWERS,user.getFollowersShort());
+        ra.addFlashAttribute(FOLLOWINGS,user.getFollowingsShort());
 
         //Hack because object comparison isn't working on that case
-        model.addAttribute(FOLLOWER_IDS,user.getFollowersShort().stream().map(AppUser::getId).collect(Collectors.toSet()));
-        model.addAttribute(FOLLOWING_IDS,user.getFollowingsShort().stream().map(AppUser::getId).collect(Collectors.toSet()));
+        ra.addFlashAttribute(FOLLOWER_IDS,user.getFollowersShort().stream().map(AppUser::getId).collect(Collectors.toSet()));
+        ra.addFlashAttribute(FOLLOWING_IDS,user.getFollowingsShort().stream().map(AppUser::getId).collect(Collectors.toSet()));
 
-        model.addAttribute(MY_PROFILE, Boolean.TRUE);
-        model.addAttribute(IMAGE,user.getUserImage());
+        ra.addFlashAttribute(MY_PROFILE, Boolean.TRUE);
+        ra.addFlashAttribute(IMAGE,user.getUserImage());
+        ra.addFlashAttribute(ENABLE_FOLLOW_BUTTON,Boolean.FALSE);
+
 
         Map<Long, Post> userPostsMap = user.getPosts().stream().collect(Collectors.toMap(Post::getId, p -> p));
         session.setAttribute("userPostsMap", userPostsMap);
 
-        return PROFILE;
+        return "redirect:/profile";
     }
 
     @RequestMapping(value = { "/profile/{id}" }, method = RequestMethod.GET)
-    public String profilePage(Model model, @PathVariable Long id, @PathVariable Boolean follows) {
-        AppUser user =restClientService.getUserData(id);
+    public String profilePageOtherUsers(@PathVariable Long id, HttpSession session, Principal principal, RedirectAttributes ra) {
+        AppUser currentAppUser = (AppUser) session.getAttribute("currentAppUser");
+        if(currentAppUser == null){
+            currentAppUser = restClientService.getUserData(principal.getName());
+            session.setAttribute("currentAppUser", currentAppUser);
+        }
 
-        model.addAttribute(USER_NAME, user.getFullName());
-        model.addAttribute(POSTS,user.getPosts());
-        model.addAttribute(MY_PROFILE, Boolean.FALSE);
-        model.addAttribute(FOLLOWS, follows);
+        AppUser user = restClientService.getUserData(id);
 
-        model.addAttribute(IMAGE,user.getUserImage());
+        ra.addFlashAttribute(USER_NAME, user.getFullName());
+        ra.addFlashAttribute(USER_ID, user.getId());
+        ra.addFlashAttribute(POSTS,user.getPosts());
+        ra.addFlashAttribute(MY_PROFILE, Boolean.FALSE);
+        ra.addFlashAttribute(ENABLE_FOLLOW_BUTTON,Boolean.TRUE);
+        ra.addFlashAttribute(IMAGE,user.getUserImage());
+        ra.addFlashAttribute(FOLLOWING_IDS,currentAppUser.getFollowingsShort().stream().map(AppUser::getId).collect(Collectors.toSet()));
 
+
+        return "redirect:/profile";
+    }
+
+    @RequestMapping(value = { "/profile" }, method = RequestMethod.GET)
+    public String profilePage(Model model){
         return PROFILE;
     }
 
@@ -185,7 +200,6 @@ public class AppUserController {
         AppUser currentUser = (AppUser) session.getAttribute("currentAppUser");
         if(currentUser == null){
             currentUser =restClientService.getUserData(principal.getName());
-            session.removeAttribute("currentAppUser");
             session.setAttribute("currentAppUser", currentUser);
         }
 
@@ -265,10 +279,24 @@ public class AppUserController {
         return "redirect:/post/"+id;
     }
 
-    @RequestMapping(value = {"/followUser/{id}" }, method = RequestMethod.GET)
-    public String followUser(@PathVariable Long id, Principal principal){
+    @RequestMapping(value = {"/followUser/{id}/{page}" }, method = RequestMethod.GET)
+    public String followUser(@PathVariable Long id,@PathVariable String page, Principal principal, HttpSession session){
         AppUser persistedUser = restClientService.followUser(principal.getName(), id);
-        return "redirect:/index";
+        if(persistedUser != null)
+            session.setAttribute("currentAppUser", persistedUser);
+        if(PROFILE.equals(page))
+            page=page+'/'+id;
+        return "redirect:/"+page;
+    }
+
+    @RequestMapping(value = {"/unfollowUser/{id}/{page}" }, method = RequestMethod.GET)
+    public String unfollowUser(@PathVariable Long id,@PathVariable String page, Principal principal, HttpSession session){
+        AppUser persistedUser = restClientService.unfollowUser(principal.getName(), id);
+        if(persistedUser != null)
+            session.setAttribute("currentAppUser", persistedUser);
+        if(PROFILE.equals(page))
+            page=page+'/'+id;
+        return "redirect:/"+page;
     }
 
 }

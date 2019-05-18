@@ -64,6 +64,7 @@ public class RestClientService implements UserDetailsService {
     private final String ADD_LIKE_REACTION = "addLikeReaction";
     private final String REMOVE_LIKE_REACTION = "removeLikeReaction";
     private final String FOLLOW_USER = "followUser";
+    private final String UNFOLLOW_USER = "unfollowUser";
 
 
     public boolean checkIfAppUserExists(String email){
@@ -284,6 +285,20 @@ public class RestClientService implements UserDetailsService {
 
         URI targetUrl= UriComponentsBuilder.fromUriString(REST_SERVER)  // Build the base link
                 .path(FOLLOW_USER)                                     // Add path
+                .queryParam("email", email)                      // Add one or more query params
+                .queryParam("userId", userId)                      // Add one or more query params
+                .build()                                                 // Build the URL
+                .encode()                                                // Encode any URI items that need to be encoded
+                .toUri();
+
+        return restTemplate.postForObject(targetUrl, null, AppUser.class);
+
+    }
+
+    public AppUser unfollowUser(String email, Long userId){
+
+        URI targetUrl= UriComponentsBuilder.fromUriString(REST_SERVER)  // Build the base link
+                .path(UNFOLLOW_USER)                                     // Add path
                 .queryParam("email", email)                      // Add one or more query params
                 .queryParam("userId", userId)                      // Add one or more query params
                 .build()                                                 // Build the URL
