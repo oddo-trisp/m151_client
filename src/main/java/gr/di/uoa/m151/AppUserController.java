@@ -36,10 +36,13 @@ public class AppUserController {
     private static final String LIKE_REACTION = "likeReaction";
     private static final String POSTS = "posts";
     private static final String FOLLOWERS = "followers";
+    private static final String FOLLOWER_IDS = "followerIds";
     private static final String FOLLOWINGS = "followings";
+    private static final String FOLLOWING_IDS = "followingIds";
     private static final String COMMENT_REACTION = "commentReaction";
     private static final String COMMENTS = "comments";
     private static final String MY_PROFILE = "myProfile";
+    private static final String FOLLOWS = "follows";
 
     private static final String USER_NAME = "user_name";
 
@@ -136,14 +139,33 @@ public class AppUserController {
         }
         model.addAttribute(USER_NAME, user.getFullName());
         model.addAttribute(POSTS,user.getPosts());
+
         model.addAttribute(FOLLOWERS,user.getFollowersShort());
         model.addAttribute(FOLLOWINGS,user.getFollowingsShort());
-        model.addAttribute(MY_PROFILE, Boolean.TRUE);
 
+        //Hack because object comparison isn't working on that case
+        model.addAttribute(FOLLOWER_IDS,user.getFollowersShort().stream().map(AppUser::getId).collect(Collectors.toSet()));
+        model.addAttribute(FOLLOWING_IDS,user.getFollowingsShort().stream().map(AppUser::getId).collect(Collectors.toSet()));
+
+        model.addAttribute(MY_PROFILE, Boolean.TRUE);
         model.addAttribute(IMAGE,user.getUserImage());
 
         Map<Long, Post> userPostsMap = user.getPosts().stream().collect(Collectors.toMap(Post::getId, p -> p));
         session.setAttribute("userPostsMap", userPostsMap);
+
+        return PROFILE;
+    }
+
+    @RequestMapping(value = { "/profile/{id}" }, method = RequestMethod.GET)
+    public String profilePage(Model model, @PathVariable Long id, @PathVariable Boolean follows) {
+        AppUser user =restClientService.getUserData(id);
+
+        model.addAttribute(USER_NAME, user.getFullName());
+        model.addAttribute(POSTS,user.getPosts());
+        model.addAttribute(MY_PROFILE, Boolean.FALSE);
+        model.addAttribute(FOLLOWS, follows);
+
+        model.addAttribute(IMAGE,user.getUserImage());
 
         return PROFILE;
     }

@@ -54,6 +54,7 @@ public class RestClientService implements UserDetailsService {
     private final String REST_SERVER = "http://localhost:8580/";
     private final String SIGN_UP = "signup";
     private final String FIND_APPUSER_BY_EMAIL = "findAppUserByEmail";
+    private final String FIND_APPUSER_BY_ID = "findAppUserById";
     private final String FIND_SUGGESTIONS = "findSuggestions";
     private final String FIND_POST_BY_ID = "findPostById";
     private final String ADD_NEW_POST = "addNewPost";
@@ -157,6 +158,17 @@ public class RestClientService implements UserDetailsService {
         URI targetUrl= UriComponentsBuilder.fromUriString(REST_SERVER)  // Build the base link
                 .path(FIND_APPUSER_BY_EMAIL)                            // Add path
                 .queryParam("email", email)                       // Add one or more query params
+                .build()                                                // Build the URL
+                .encode()                                               // Encode any URI items that need to be encoded
+                .toUri();                                               // Convert to URI
+
+        return restTemplate.getForObject(targetUrl, AppUser.class);
+    }
+
+    public AppUser getUserData(Long id){
+        URI targetUrl= UriComponentsBuilder.fromUriString(REST_SERVER)  // Build the base link
+                .path(FIND_APPUSER_BY_ID)                            // Add path
+                .queryParam("userId", id)                       // Add one or more query params
                 .build()                                                // Build the URL
                 .encode()                                               // Encode any URI items that need to be encoded
                 .toUri();                                               // Convert to URI
