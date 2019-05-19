@@ -51,7 +51,8 @@ public class RestClientService implements UserDetailsService {
     private String bucketName;
 
 
-    private final String REST_SERVER = "http://localhost:8580/";
+    //private final String REST_SERVER = "http://localhost:8580/";
+    private final String REST_SERVER = "http://m151-api/";
     private final String SIGN_UP = "signup";
     private final String FIND_APPUSER_BY_EMAIL = "findAppUserByEmail";
     private final String FIND_APPUSER_BY_ID = "findAppUserById";
