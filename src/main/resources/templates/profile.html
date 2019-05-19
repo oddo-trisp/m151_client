@@ -35,16 +35,25 @@
       </nav>
       <div class="tab-content" id="nav-tabContent">
         <div class="tab-pane fade show active" id="nav-posts" role="tabpanel" aria-labelledby="nav-posts-tab">
-          <div class="posts row">
+          <div class="row" th:text="${posts.size() == 0 ? 'There are no posts...' : ''}"></div>
+          <div class="posts row" th:if="${myProfile || followingIds.contains(user_id)}">
             <div class="col-lg-4 col-md-6 col-sm-12 post" th:each="post:${posts}">
               <a th:href="@{'/post/'+${post.getId()}}"><img th:src="${post.getPostImage() != null ? post.getPostImage() : 'img/post/groceries.png'}"/></a>
               <p class="post-title" th:text="${post.getPostTitle()}"></p>
             </div>
           </div>
+          <div class="posts row" th:if="${!myProfile && !followingIds.contains(user_id)}">
+            <div class="col-lg-4 col-md-6 col-sm-12 post" th:each="post:${!myProfile ?
+                                                                          posts.size() > 3 ? posts.subList(0,3) : posts
+                                                                          : posts}">
+              <img th:src="${post.getPostImage() != null ? post.getPostImage() : 'img/post/groceries.png'}"/>
+              <p class="post-title" th:text="${post.getPostTitle()}"></p>
+            </div>
+          </div>
         </div>
         <div th:if="${myProfile}" class="tab-pane fade" id="nav-followersShort" role="tabpanel" aria-labelledby="nav-followersShort-tab">
+          <div class="row" th:text="${followers.size() > 0 ? followers.size()+' people are following you!' : 'No one is following you...'}"></div>
           <div class="followersShort row">
-<!--            <div class="row" th:text="${followers.size() > 0 ? followers.size()+' people follow you!' : 'No one is following you...'}"></div>-->
             <div class="col-md-3 col-sm-12" th:each="follower:${followers}">
               <a th:href="@{'profile/'+${follower.id}}">
                 <img alt="" th:src="${follower.userImage != null ? follower.userImage : 'img/friends.png'}">
@@ -56,8 +65,8 @@
           </div>
         </div>
         <div th:if="${myProfile}" class="tab-pane fade" id="nav-following" role="tabpanel" aria-labelledby="nav-followersShort-tab">
+          <div class="row" th:text="${followings.size() > 0 ? 'You are following '+followings.size()+' people!' : 'You are not following anyone...'}"></div>
           <div class="followersShort row">
-<!--            <div class="row" th:text="${followings.size() > 0 ? 'You follow '+followings.size()+' person!' : 'You do not follow anyone...'}"></div>-->
             <div class="col-md-3 col-sm-12" th:each="following:${followings}">
               <a th:href="@{'profile/'+${following.id}}">
                 <img alt="" th:src="${following.userImage != null ? following.userImage : 'img/friends.png'}">

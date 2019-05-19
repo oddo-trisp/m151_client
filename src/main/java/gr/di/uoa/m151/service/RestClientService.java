@@ -242,10 +242,11 @@ public class RestClientService implements UserDetailsService {
         return restTemplate.postForObject(targetUrl, null, Post.class);
     }
 
-    public List<AppUser> loadSuggestions(String email){
+    public List<AppUser> loadSuggestions(String email, Integer limit){
         URI targetUrl= UriComponentsBuilder.fromUriString(REST_SERVER)  // Build the base link
                 .path(FIND_SUGGESTIONS)                                     // Add path
                 .queryParam("email", email)                      // Add one or more query params
+                .queryParam("limit", limit)                      // Add one or more query params
                 .build()                                                 // Build the URL
                 .encode()                                                // Encode any URI items that need to be encoded
                 .toUri();
@@ -259,6 +260,7 @@ public class RestClientService implements UserDetailsService {
         URI targetUrl= UriComponentsBuilder.fromUriString(REST_SERVER)  // Build the base link
                 .path(FIND_SUGGESTIONS_WITH_POSTS)                                     // Add path
                 .queryParam("email", email)                      // Add one or more query params
+                .queryParam("limit", 100)                      // Add one or more query params
                 .build()                                                 // Build the URL
                 .encode()                                                // Encode any URI items that need to be encoded
                 .toUri();

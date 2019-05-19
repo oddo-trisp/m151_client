@@ -60,7 +60,7 @@ public class AppUserController {
 
     @RequestMapping(value = { "/", "/index" }, method = RequestMethod.GET)
     public String indexPage(Model model, Principal principal) {
-        List<AppUser> suggestions = restClientService.loadSuggestions(principal.getName());
+        List<AppUser> suggestions = restClientService.loadSuggestions(principal.getName(), 12);
         List<Post> recentPosts = restClientService.loadRecentPosts(principal.getName());
         recentPosts.forEach(p -> p.likedByUser(principal.getName()));
         model.addAttribute(SUGGESTIONS, suggestions);
@@ -175,7 +175,11 @@ public class AppUserController {
             session.setAttribute("currentAppUser", currentAppUser);
         }
 
-        AppUser user = restClientService.getUserData(id);
+        AppUser user = (AppUser) session.getAttribute("previousAppUser");
+        if(user == null || !user.getId().equals(id)){
+            user = restClientService.getUserData(id);
+            session.setAttribute("previousAppUser", user);
+        }
 
         ra.addFlashAttribute(USER_NAME, user.getFullName());
         ra.addFlashAttribute(USER_ID, user.getId());
