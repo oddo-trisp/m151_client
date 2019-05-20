@@ -189,6 +189,8 @@ public class AppUserController {
         ra.addFlashAttribute(IMAGE,user.getUserImage());
         ra.addFlashAttribute(FOLLOWING_IDS,currentAppUser.getFollowingsShort().stream().map(AppUser::getId).collect(Collectors.toSet()));
 
+        ra.addFlashAttribute(FOLLOWERS,user.getFollowersShort());
+        ra.addFlashAttribute(FOLLOWINGS,user.getFollowingsShort());
 
         return "redirect:/profile";
     }
