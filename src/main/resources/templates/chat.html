@@ -40,6 +40,9 @@
     <script th:inline="javascript">
         var sender = /*[[${sender}]]*/ {};
         var receiver = /*[[${receiver}]]*/ {};
+        var conversation = /*[[${conversation}]]*/ {};
+
+        console.log(conversation);
 
 
         var messageForm = document.querySelector('#messageForm');
@@ -76,6 +79,40 @@
             )
 
             connectingElement.classList.add('hidden');
+
+
+            for (var i = 0, l = conversation.length; i < l; i++) {
+                var message = conversation[l-1-i];
+
+                var messageElement = document.createElement('li');
+
+
+                messageElement.classList.add('chat-message');
+
+                var avatarElement = document.createElement('i');
+                var avatarText = document.createTextNode(message.sender.fullName[0]);
+                avatarElement.appendChild(avatarText);
+                avatarElement.style['background-color'] = getAvatarColor(message.sender.fullName);
+
+                messageElement.appendChild(avatarElement);
+
+                var usernameElement = document.createElement('span');
+                var usernameText = document.createTextNode(message.sender.fullName);
+                usernameElement.appendChild(usernameText);
+                messageElement.appendChild(usernameElement);
+
+
+                var textElement = document.createElement('p');
+                var messageText = document.createTextNode(message.content);
+                textElement.appendChild(messageText);
+
+                messageElement.appendChild(textElement);
+
+                messageArea.appendChild(messageElement);l
+                messageArea.scrollTop = messageArea.scrollHeight;
+
+            }
+
         }
 
 
@@ -136,7 +173,7 @@
 
             messageElement.appendChild(textElement);
 
-            messageArea.appendChild(messageElement);l
+            messageArea.appendChild(messageElement);
             messageArea.scrollTop = messageArea.scrollHeight;
         }
 

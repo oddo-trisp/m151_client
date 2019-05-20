@@ -2,6 +2,7 @@ package gr.di.uoa.m151.controller;
 
 import com.amazonaws.util.StringUtils;
 import gr.di.uoa.m151.entity.AppUser;
+import gr.di.uoa.m151.entity.ChatMessage;
 import gr.di.uoa.m151.entity.Post;
 import gr.di.uoa.m151.entity.UserPostReaction;
 import gr.di.uoa.m151.service.RestClientService;
@@ -14,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -314,11 +316,22 @@ public class AppUserController {
             currentUser =restClientService.getUserData(principal.getName());
             session.setAttribute("currentAppUser", currentUser);
         }
-        ra.addFlashAttribute("sender", currentUser);
-        ra.addFlashAttribute("receiver", currentUser.getFollowingsShort()
+
+        AppUser receiver = currentUser.getFollowingsShort()
                 .stream()
                 .filter(appUser -> followingId.equals(appUser.getId())).findFirst()
-                .orElse(null));
+                .orElse(null);
+
+        List<ChatMessage> conversation = new ArrayList<>();
+
+        if(receiver != null) {
+            conversation = restClientService.loadConversation(String.valueOf(currentUser.getId()),
+                    String.valueOf(receiver.getId()));
+        }
+
+        ra.addFlashAttribute("conversation",conversation);
+        ra.addFlashAttribute("sender", currentUser);
+        ra.addFlashAttribute("receiver", receiver);
 
         return "redirect:/chat";
     }

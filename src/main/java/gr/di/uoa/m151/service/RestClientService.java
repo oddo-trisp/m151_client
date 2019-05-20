@@ -8,11 +8,13 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.*;
 import gr.di.uoa.m151.entity.AppUser;
+import gr.di.uoa.m151.entity.ChatMessage;
 import gr.di.uoa.m151.entity.Post;
 import gr.di.uoa.m151.entity.UserPostReaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -66,6 +68,8 @@ public class RestClientService implements UserDetailsService {
     private final String REMOVE_LIKE_REACTION = "removeLikeReaction";
     private final String FOLLOW_USER = "followUser";
     private final String UNFOLLOW_USER = "unfollowUser";
+    private final String SAVE_CONVERSATION = "saveConversation";
+    private final String LOAD_CONVERSATION = "findMessagesOnConversation";
 
 
     public boolean checkIfAppUserExists(String email){
@@ -310,5 +314,30 @@ public class RestClientService implements UserDetailsService {
 
         return restTemplate.postForObject(targetUrl, null, AppUser.class);
 
+    }
+
+    public String saveConversation(List<ChatMessage> chatMessages){
+
+        URI targetUrl= UriComponentsBuilder.fromUriString(REST_SERVER)  // Build the base link
+                .path(SAVE_CONVERSATION)                                     // Add path
+                .build()                                                 // Build the URL
+                .encode()                                                // Encode any URI items that need to be encoded
+                .toUri();
+
+       return restTemplate.postForObject(targetUrl, chatMessages, String.class);
+    }
+
+    public List<ChatMessage> loadConversation(String senderId, String receiverId){
+        URI targetUrl= UriComponentsBuilder.fromUriString(REST_SERVER)  // Build the base link
+                .path(LOAD_CONVERSATION)                                     // Add path
+                .queryParam("senderId", senderId)                      // Add one or more query params
+                .queryParam("receiverId", receiverId)                      // Add one or more query params
+                .build()                                                 // Build the URL
+                .encode()                                                // Encode any URI items that need to be encoded
+                .toUri();
+
+        return restTemplate.exchange(targetUrl, HttpMethod.GET, null,
+                new ParameterizedTypeReference<List<ChatMessage>>(){})
+                .getBody();
     }
 }

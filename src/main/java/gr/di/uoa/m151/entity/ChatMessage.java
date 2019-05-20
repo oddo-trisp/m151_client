@@ -1,13 +1,13 @@
 package gr.di.uoa.m151.entity;
 
-/**
- * Created by rajeevkumarsingh on 24/07/17.
- */
+import java.sql.Timestamp;
+
 public class ChatMessage {
     private MessageType type;
     private String content;
     private AppUser sender;
     private AppUser receiver;
+    private Timestamp creationDate;
 
     public enum MessageType {
         CHAT,
@@ -45,5 +45,13 @@ public class ChatMessage {
 
     public void setReceiver(AppUser receiver) {
         this.receiver = receiver;
+    }
+
+    public Timestamp getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Timestamp creationDate) {
+        this.creationDate = creationDate;
     }
 }

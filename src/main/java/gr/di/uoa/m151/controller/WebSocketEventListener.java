@@ -2,6 +2,7 @@ package gr.di.uoa.m151.controller;
 
 import gr.di.uoa.m151.entity.AppUser;
 import gr.di.uoa.m151.entity.ChatMessage;
+import gr.di.uoa.m151.service.RestClientService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
+import java.util.List;
+
 /**
  * Created by rajeevkumarsingh on 25/07/17.
  */
@@ -19,6 +22,9 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 public class WebSocketEventListener {
 
     private static final Logger logger = LoggerFactory.getLogger(WebSocketEventListener.class);
+
+    @Autowired
+    private RestClientService restClientService;
 
     @Autowired
     private SimpMessageSendingOperations messagingTemplate;
@@ -36,11 +42,16 @@ public class WebSocketEventListener {
         if(sender != null) {
             logger.info("User Disconnected : " + sender.getFullName());
 
+            List<ChatMessage> chatMessageList = (List<ChatMessage>) headerAccessor.getSessionAttributes().get("chatMessages");
+            if(chatMessageList != null && !chatMessageList.isEmpty())
+                restClientService.saveConversation(chatMessageList);
+
             ChatMessage chatMessage = new ChatMessage();
             chatMessage.setType(ChatMessage.MessageType.LEAVE);
             chatMessage.setSender(sender);
 
             messagingTemplate.convertAndSend("/topic/public", chatMessage);
+
         }
     }
 }
