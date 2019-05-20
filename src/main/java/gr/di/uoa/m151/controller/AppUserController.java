@@ -1,4 +1,4 @@
-package gr.di.uoa.m151;
+package gr.di.uoa.m151.controller;
 
 import com.amazonaws.util.StringUtils;
 import gr.di.uoa.m151.entity.AppUser;
@@ -187,10 +187,12 @@ public class AppUserController {
         ra.addFlashAttribute(MY_PROFILE, Boolean.FALSE);
         ra.addFlashAttribute(ENABLE_FOLLOW_BUTTON,Boolean.TRUE);
         ra.addFlashAttribute(IMAGE,user.getUserImage());
-        ra.addFlashAttribute(FOLLOWING_IDS,currentAppUser.getFollowingsShort().stream().map(AppUser::getId).collect(Collectors.toSet()));
-
         ra.addFlashAttribute(FOLLOWERS,user.getFollowersShort());
         ra.addFlashAttribute(FOLLOWINGS,user.getFollowingsShort());
+
+        //Hack because object comparison isn't working on that case
+        ra.addFlashAttribute(FOLLOWER_IDS,user.getFollowersShort().stream().map(AppUser::getId).collect(Collectors.toSet()));
+        ra.addFlashAttribute(FOLLOWING_IDS,user.getFollowingsShort().stream().map(AppUser::getId).collect(Collectors.toSet()));
 
         return "redirect:/profile";
     }
@@ -303,6 +305,27 @@ public class AppUserController {
         if(PROFILE.equals(page))
             page=page+'/'+id;
         return "redirect:/"+page;
+    }
+
+    @RequestMapping(value = {"/chat/{followingId}" }, method = RequestMethod.GET)
+    public String chatPageRedirect(HttpSession session, Principal principal, @PathVariable Long followingId, RedirectAttributes ra){
+        AppUser currentUser = (AppUser) session.getAttribute("currentAppUser");
+        if(currentUser == null){
+            currentUser =restClientService.getUserData(principal.getName());
+            session.setAttribute("currentAppUser", currentUser);
+        }
+        ra.addFlashAttribute("sender", currentUser);
+        ra.addFlashAttribute("receiver", currentUser.getFollowingsShort()
+                .stream()
+                .filter(appUser -> followingId.equals(appUser.getId())).findFirst()
+                .orElse(null));
+
+        return "redirect:/chat";
+    }
+
+    @RequestMapping(value = {"/chat" }, method = RequestMethod.GET)
+    public String chatPage(){
+        return "chat";
     }
 
 }

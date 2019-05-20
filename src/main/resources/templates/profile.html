@@ -29,8 +29,8 @@
       <nav>
         <div class="nav nav-tabs justify-content-center" id="nav-tab" role="tablist">
           <a class="nav-item nav-link active" id="nav-posts-tab" data-toggle="tab" th:href="@{#nav-posts}" role="tab" aria-controls="nav-posts" aria-selected="true">Posts</a>
-          <a class="nav-item nav-link" id="nav-followersShort-tab" data-toggle="tab" th:href="@{#nav-followersShort}" role="tab" aria-controls="nav-followersShort" aria-selected="false">Followers (<span th:text="${followers.size()}"></span>)</a>
-          <a class="nav-item nav-link" id="nav-following-tab" data-toggle="tab" th:href="@{#nav-following}" role="tab" aria-controls="nav-following" aria-selected="false">Following (<span th:text="${followings.size()}"></span>)</a>
+          <a class="nav-item nav-link" id="nav-followersShort-tab" data-toggle="tab" th:href="@{#nav-followersShort}" role="tab" aria-controls="nav-followersShort" aria-selected="false"><span th:text="'Followers ('+${followers.size()}+')'"></span></a>
+          <a class="nav-item nav-link" id="nav-following-tab" data-toggle="tab" th:href="@{#nav-following}" role="tab" aria-controls="nav-following" aria-selected="false"><span th:text="'Following ('+${followings.size()}+')'"></span></a>
         </div>
       </nav>
       <div class="tab-content" id="nav-tabContent">
@@ -90,6 +90,7 @@
                 </a>
                 <p th:text="${following.fullName}"></p>
                 <a th:if="${myProfile}" class="btn btn-primary" th:href="@{'/unfollowUser/'+${following.id}+'/profileCurrent'}">Unfollow</a>
+                <a th:if="${myProfile}" class="btn btn-primary" th:href="@{'/chat/'+${following.id}}">Message</a>
               </div>
             </div>
           </div>
