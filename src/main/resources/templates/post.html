@@ -30,9 +30,9 @@
         <p th:text="${currentPost.postText}"></p>
       </article>
       <div class="post-buttons">
-        <a  class="action like-action" th:href="@{${likeReaction ne null} ? '/removeLikeReaction/'+${currentPost.id}+'/'+${likeReaction.id} : '/addLikeReaction/'+${currentPost.id}}" ><i th:class="${likeReaction ne null} ? 'fas fa-heart' : 'far fa-heart'"></i></a>
+        <a  class="action like-action" th:href="@{${currentPost.likedByCurrentUser ne null ? '/removeLikeReaction/'+currentPost.id+'/'+currentPost.likedByCurrentUser.id : '/addLikeReaction/'+currentPost.id}}" >
+          <i th:class="${currentPost.likedByCurrentUser ne null ? 'fas fa-heart' : 'far fa-heart'}"></i></a>
         <div class="action comment-action"><i class="fa fa-comment comment-icon"></i></div>
-        <div th:text="${likeReaction ne null} ? 'action like-action fas' : 'action like-action far'"></div>
       </div>
 
       <div class="form-popup" id="comment-form" style="display: none;">
