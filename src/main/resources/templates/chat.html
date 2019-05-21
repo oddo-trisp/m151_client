@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" th:href="@{https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{css/styles.css}">
+    <link rel="stylesheet" th:href="@{css/navbar.css}">
     <link rel="stylesheet" th:href="@{css/chat.css}">
     <link href="https://fonts.googleapis.com/css?family=Pacifico|Raleway|Comfortaa" rel="stylesheet">
     <!-- Font Awesome -->
@@ -16,29 +17,36 @@
 </head>
 
   <body>
-    <noscript>
-      <h2>Sorry! Your browser doesn't support Javascript</h2>
-    </noscript>
 
-    <div id="chat-page">
-        <div class="chat-container">
-            <div class="chat-header">
-                <h2>CookHub - Chat</h2>
-            </div>
-            <div class="connecting">
-                Connecting...
-            </div>
-            <ul id="messageArea">
+    <div class="container-fluid">
 
-            </ul>
-            <form id="messageForm" name="messageForm" nameForm="messageForm">
-                <div class="form-group">
-                    <div class="input-group clearfix">
-                        <input type="text" id="message" placeholder="Type a message..." autocomplete="off" class="form-control"/>
-                        <button type="submit" class="btn btn-primary">Send</button>
-                    </div>
+        <header id="navigation" th:include="html_components/navbar"></header>
+
+        <noscript>
+            <h2>Sorry! Your browser doesn't support Javascript</h2>
+        </noscript>
+
+        <div id="chat-page">
+
+            <div class="chat-container">
+                <div class="chat-header">
+                    <h2>CookHub - Chat</h2>
                 </div>
-            </form>
+                <div class="connecting">
+                    Connecting...
+                </div>
+                <ul id="messageArea">
+
+                </ul>
+                <form id="messageForm" name="messageForm" nameForm="messageForm">
+                    <div class="form-group">
+                        <div class="input-group clearfix">
+                            <input type="text" id="message" placeholder="Type a message..." autocomplete="off" class="form-control"/>
+                            <button type="submit" class="btn btn-primary">Send</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 

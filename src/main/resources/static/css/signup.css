@@ -1,6 +1,11 @@
-body {
+html{
+  height: 100%;
+}
+
+body{
+  height: 100%;
   background-image: url("../img/background.png");
-  background-size: cover;
+  background-size: 100% 100%; /* width and height, can be %, px or whatever. */
 }
 
 #sign-up {
