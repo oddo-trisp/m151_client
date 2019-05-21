@@ -182,7 +182,7 @@ public class AppUserController {
         }
 
         ra.addFlashAttribute(USER_NAME, user.getFullName());
-        ra.addFlashAttribute(USER_ID, currentAppUser.getId());
+        ra.addFlashAttribute(USER_ID, user.getId());
         ra.addFlashAttribute(POSTS,user.getPosts());
         ra.addFlashAttribute(MY_PROFILE, Boolean.FALSE);
         ra.addFlashAttribute(ENABLE_FOLLOW_BUTTON,Boolean.TRUE);

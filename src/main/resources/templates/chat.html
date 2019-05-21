@@ -78,6 +78,14 @@
 
         if(sender != null) {
 
+            sender.posts = [];
+            sender.followingsShort = [];
+            sender.followersShort = [];
+
+            receiver.posts = [];
+            receiver.followingsShort = [];
+            receiver.followersShort = [];
+
             var socket = new SockJS('/ws');
             stompClient = Stomp.over(socket);
 

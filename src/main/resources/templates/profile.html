@@ -39,14 +39,14 @@
         <div class="tab-pane fade show active" id="nav-posts" role="tabpanel" aria-labelledby="nav-posts-tab">
           <div class="row" th:text="${posts.size() == 0 ? 'There are no posts...' : ''}"></div>
           <!-- IF IT IS MY PROFILE OR SOMEONE'S I FOLLOW -->
-          <div class="posts row" th:if="${myProfile || followingIds.contains(user_id)}">
+          <div class="posts row" th:if="${myProfile || !canFollow}">
             <div class="col-lg-4 col-md-6 col-sm-12 post" th:each="post:${posts}">
               <a th:href="@{'/post/'+${post.getId()}}"><img th:src="${post.getPostImage() != null ? post.getPostImage() : 'img/post/groceries.png'}"/></a>
               <p class="post-title" th:text="${post.getPostTitle()}"></p>
             </div>
           </div>
           <!-- ANOTHER USER'S PROFILE (THAT I DON'T FOLLOW) I CAN ONLY SEE 3 LATEST POSTS -->
-          <div class="posts row" th:if="${!myProfile && !followingIds.contains(user_id)}">
+          <div class="posts row" th:if="${!myProfile && canFollow}">
             <div class="col-lg-4 col-md-6 col-sm-12 post" th:each="post:${!myProfile ?
                                                                           posts.size() > 3 ? posts.subList(0,3) : posts
                                                                           : posts}">
@@ -59,7 +59,7 @@
         <!-- FOLLOWERS TAB PANE -->
         <div class="tab-pane fade" id="nav-followersShort" role="tabpanel" aria-labelledby="nav-followersShort-tab">
           <!-- IF IT IS MY PROFILE OR SOMEONE'S I FOLLOW -->
-          <div th:if="${myProfile || followingIds.contains(user_id)}">
+          <div th:if="${myProfile || !canFollow}">
             <div class="row" th:if="${followers.size() == 0}"> There are no followers </div>
             <div class="followersShort row" th:if="${followers.size() > 0}">
               <div class="col-md-3 col-sm-12" th:each="follower:${followers}">
@@ -73,7 +73,7 @@
             </div>
           </div>
           <!-- ANOTHER USER'S PROFILE (THAT I DON'T FOLLOW) I HAVE TO FOLLOW TO VIEW FOLLOWERS -->
-          <div th:if="${!myProfile && !followingIds.contains(user_id)}">
+          <div th:if="${!myProfile && canFollow}">
             <div class="row"> You have to follow <span style="color: #c25b5b; font-weight: bold; padding:0 5px;" th:text="${user_name}"></span> to view her/his followers! </div>
           </div>
         </div>
@@ -81,9 +81,9 @@
         <!-- FOLLOWING TAB PANE -->
         <div class="tab-pane fade" id="nav-following" role="tabpanel" aria-labelledby="nav-followersShort-tab">
           <!-- IF IT IS MY PROFILE OR SOMEONE'S I FOLLOW -->
-          <div th:if="${myProfile || followingIds.contains(user_id)}">
+          <div th:if="${myProfile || !canFollow}">
             <div class="row" th:if="${followings.size() == 0}"> Not following anyone... </div>
-            <div class="followersShort row" th:if="${followers.size() > 0}">
+            <div class="followersShort row" th:if="${followings.size() > 0}">
               <div class="col-md-3 col-sm-12" th:each="following:${followings}">
                 <a th:href="@{'profile/'+${following.id}}">
                   <img alt="" th:src="${following.userImage != null ? following.userImage : 'img/friends.png'}">
@@ -95,7 +95,7 @@
             </div>
           </div>
           <!-- ANOTHER USER'S PROFILE (THAT I DON'T FOLLOW) I HAVE TO FOLLOW TO VIEW FOLLOWERS -->
-          <div th:if="${!myProfile && !followingIds.contains(user_id)}">
+          <div th:if="${!myProfile && canFollow}">
             <div class="row"> You have to follow <span style="color: #c25b5b; font-weight: bold; padding:0 5px;" th:text="${user_name}"></span> to view who she/he follows </div>
           </div>
         </div>
