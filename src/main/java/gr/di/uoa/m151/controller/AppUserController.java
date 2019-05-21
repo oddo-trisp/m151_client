@@ -15,10 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -46,6 +43,7 @@ public class AppUserController {
     private static final String COMMENTS = "comments";
     private static final String MY_PROFILE = "myProfile";
     private static final String ENABLE_FOLLOW_BUTTON = "enableFollowButton";
+    private static final String CAN_FOLLOW = "canFollow";
 
     private static final String USER_NAME = "user_name";
     private static final String USER_ID = "user_id";
@@ -184,7 +182,7 @@ public class AppUserController {
         }
 
         ra.addFlashAttribute(USER_NAME, user.getFullName());
-        ra.addFlashAttribute(USER_ID, user.getId());
+        ra.addFlashAttribute(USER_ID, currentAppUser.getId());
         ra.addFlashAttribute(POSTS,user.getPosts());
         ra.addFlashAttribute(MY_PROFILE, Boolean.FALSE);
         ra.addFlashAttribute(ENABLE_FOLLOW_BUTTON,Boolean.TRUE);
@@ -193,8 +191,12 @@ public class AppUserController {
         ra.addFlashAttribute(FOLLOWINGS,user.getFollowingsShort());
 
         //Hack because object comparison isn't working on that case
-        ra.addFlashAttribute(FOLLOWER_IDS,user.getFollowersShort().stream().map(AppUser::getId).collect(Collectors.toSet()));
-        ra.addFlashAttribute(FOLLOWING_IDS,user.getFollowingsShort().stream().map(AppUser::getId).collect(Collectors.toSet()));
+        Set<Long> followerIds = user.getFollowersShort().stream().map(AppUser::getId).collect(Collectors.toSet());
+        Set<Long> followingIds = user.getFollowingsShort().stream().map(AppUser::getId).collect(Collectors.toSet());
+
+        ra.addFlashAttribute(FOLLOWER_IDS,followerIds);
+        ra.addFlashAttribute(FOLLOWING_IDS,followingIds);
+        ra.addFlashAttribute(CAN_FOLLOW, !followerIds.contains(currentAppUser.getId()));
 
         return "redirect:/profile";
     }

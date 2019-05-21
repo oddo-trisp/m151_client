@@ -24,8 +24,8 @@
 
       <img class="profile-img" alt="" th:src="${image != null} ? ${image} : 'img/friends.png'"/> <!-- user image or default if null -->
       <p class="name" th:text="${user_name}"></p>
-      <a th:href="@{${!followingIds.contains(user_id) ? '/followUser/'+user_id+'/profile' : '/unfollowUser/'+user_id+'/profile'}}" th:if="${enableFollowButton}"
-         class="btn btn-primary" th:text="${!followingIds.contains(user_id) ? 'Follow' : 'Unfollow'}"></a>
+      <a th:href="@{${canFollow ? '/followUser/'+user_id+'/profile' : '/unfollowUser/'+user_id+'/profile'}}" th:if="${enableFollowButton}"
+         class="btn btn-primary" th:text="${canFollow ? 'Follow' : 'Unfollow'}"></a>
       <nav>
         <div class="nav nav-tabs justify-content-center" id="nav-tab" role="tablist">
           <a class="nav-item nav-link active" id="nav-posts-tab" data-toggle="tab" th:href="@{#nav-posts}" role="tab" aria-controls="nav-posts" aria-selected="true">Posts</a>
