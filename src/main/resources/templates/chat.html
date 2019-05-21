@@ -1,10 +1,20 @@
 <!DOCTYPE html>
-<html  xmlns:th="http://www.thymeleaf.org">
-  <head>
-      <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-      <title>Spring Boot WebSocket Chat Application | CalliCoder</title>
-      <link rel="stylesheet" href="/css/chat.css" />
-  </head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>CookHub</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{css/styles.css}">
+    <link rel="stylesheet" th:href="@{css/chat.css}">
+    <link href="https://fonts.googleapis.com/css?family=Pacifico|Raleway|Comfortaa" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <!-- JQUERY -->
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+</head>
+
   <body>
     <noscript>
       <h2>Sorry! Your browser doesn't support Javascript</h2>
@@ -13,7 +23,7 @@
     <div id="chat-page">
         <div class="chat-container">
             <div class="chat-header">
-                <h2>Spring WebSocket Chat Demo</h2>
+                <h2>CookHub - Chat</h2>
             </div>
             <div class="connecting">
                 Connecting...
@@ -25,7 +35,7 @@
                 <div class="form-group">
                     <div class="input-group clearfix">
                         <input type="text" id="message" placeholder="Type a message..." autocomplete="off" class="form-control"/>
-                        <button type="submit" class="primary">Send</button>
+                        <button type="submit" class="btn btn-primary">Send</button>
                     </div>
                 </div>
             </form>
@@ -35,15 +45,13 @@
     <script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js}"></script>
     <script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js}"></script>
     <script th:src="@{https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js}"></script>
-    <!--<script th:src="@{js/chat.js}"></script>-->
 
     <script th:inline="javascript">
         var sender = /*[[${sender}]]*/ {};
         var receiver = /*[[${receiver}]]*/ {};
         var conversation = /*[[${conversation}]]*/ {};
 
-        console.log(conversation);
-
+        // console.log(conversation);
 
         var messageForm = document.querySelector('#messageForm');
         var messageInput = document.querySelector('#message');
@@ -57,8 +65,8 @@
             '#ffc107', '#ff85af', '#FF9800', '#39bbb0'
         ];
 
-        console.log(sender.email);
-        console.log(receiver.email);
+        // console.log(sender.email);
+        // console.log(receiver.email);
 
         if(sender != null) {
 
@@ -89,11 +97,17 @@
 
                 messageElement.classList.add('chat-message');
 
-                var avatarElement = document.createElement('i');
-                var avatarText = document.createTextNode(message.sender.fullName[0]);
-                avatarElement.appendChild(avatarText);
-                avatarElement.style['background-color'] = getAvatarColor(message.sender.fullName);
-
+                var avatarElement;
+                if(message.sender.userImage!=null){
+                    avatarElement = document.createElement('img');
+                    avatarElement.setAttribute("src", message.sender.userImage);
+                    //avatarElement.setAttribute("style", "width:35px; height:35px; margin-right: .5rem; border-radius:50%;")
+                } else {
+                    avatarElement = document.createElement('i');
+                    var avatarText = document.createTextNode(message.sender.fullName[0]);
+                    avatarElement.appendChild(avatarText);
+                    avatarElement.style['background-color'] = getAvatarColor(message.sender.fullName);
+                }
                 messageElement.appendChild(avatarElement);
 
                 var usernameElement = document.createElement('span');
@@ -154,10 +168,17 @@
             } else {
                 messageElement.classList.add('chat-message');
 
-                var avatarElement = document.createElement('i');
-                var avatarText = document.createTextNode(message.sender.fullName[0]);
-                avatarElement.appendChild(avatarText);
-                avatarElement.style['background-color'] = getAvatarColor(message.sender.fullName);
+                var avatarElement;
+                if(message.sender.userImage!=null){
+                    avatarElement = document.createElement('img');
+                    avatarElement.setAttribute("src", message.sender.userImage);
+                   // avatarElement.setAttribute("style", "width:32px; height:32px; margin-right: .5rem; border-radius:50%;")
+                } else {
+                    avatarElement = document.createElement('i');
+                    var avatarText = document.createTextNode(message.sender.fullName[0]);
+                    avatarElement.appendChild(avatarText);
+                    avatarElement.style['background-color'] = getAvatarColor(message.sender.fullName);
+                }
 
                 messageElement.appendChild(avatarElement);
 

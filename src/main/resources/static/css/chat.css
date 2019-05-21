@@ -10,14 +10,12 @@ html,body {
 }
 
 body {
-    margin: 0;
+    margin: 0 auto;
     padding: 0;
     font-weight: 400;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 1rem;
     line-height: 1.58;
     color: #333;
-    background-color: #f4f4f4;
     height: 100%;
 }
 
@@ -27,7 +25,7 @@ body:before {
     position: absolute;
     top: 0;
     left: 0;
-    background: #128ff2;
+    background: #556080;
     content: "";
     z-index: 0;
 }
@@ -110,22 +108,19 @@ button.accent {
 
 .username-page-container {
     background: #fff;
-    box-shadow: 0 1px 11px rgba(0, 0, 0, 0.27);
+    box-shadow: 2px 4px rgba(0, 0, 0, 0.75);
     border-radius: 2px;
     width: 100%;
     max-width: 500px;
     display: inline-block;
-    margin-top: 42px;
     vertical-align: middle;
-    position: relative;
     padding: 35px 55px 35px;
     min-height: 250px;
     position: absolute;
     top: 50%;
     left: 0;
     right: 0;
-    margin: 0 auto;
-    margin-top: -160px;
+    margin: -160px auto 0 auto;
 }
 
 .username-page-container .username-submit {
@@ -192,7 +187,7 @@ button.accent {
     position: relative;
 }
 
-#chat-page .chat-message i {
+#chat-page .chat-message i, #chat-page .chat-message img {
     position: absolute;
     width: 42px;
     height: 42px;
